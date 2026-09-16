@@ -1,0 +1,42 @@
+[*]
+[*] GTKWave Analyzer v3.3.104 (w)1999-2020 BSI
+[*] Lab1 adder_tb default layout (HW1 Problem 1 - bit-serial adder)
+[*]
+[*] Signal groups, top to bottom:
+[*]   1. control/stimulus : clk, clear, load, addend, augend
+[*]   2. part (a) outputs : structural result/cout
+[*]   3. part (b) outputs : behavioral result/cout (compare with 2)
+[*]   4. part (a) internals: operand shift registers, sum bit, carry reg
+[*]
+[*] result_s/result_b/a_q/b_q are dumped bit-blasted in the VCD and
+[*] re-coalesced into vectors by gtkwave (autocoalesce, on by default).
+[timestart] 0
+[size] 1400 900
+[pos] -1 -1
+*-2.000000 0 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] adder_tb.
+[treeopen] adder_tb.dut_structural.
+[sst_width] 233
+[signals_width] 240
+[sst_expanded] 1
+@28
+adder_tb.clk
+adder_tb.clear
+adder_tb.load
+@22
+adder_tb.addend[3:0]
+adder_tb.augend[3:0]
+@28
+adder_tb.cout_s
+@22
+adder_tb.result_s[3:0]
+@28
+adder_tb.cout_b
+@22
+adder_tb.result_b[3:0]
+adder_tb.dut_structural.a_q[3:0]
+adder_tb.dut_structural.b_q[3:0]
+@28
+adder_tb.dut_structural.sum_bit
+adder_tb.dut_structural.carry_d
+adder_tb.dut_structural.carry_q

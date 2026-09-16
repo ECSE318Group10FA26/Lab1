@@ -17,8 +17,8 @@
           default = pkgs.mkShell {
             packages = with pkgs; [
               gtkwave # waveform viewer for sim/divider_tb.vcd
-              git
-              podman
+              nil
+              nixd
             ];
 
             # NOTE: podman is intentionally NOT included here. Rootless
