@@ -1,0 +1,22 @@
+[*]
+[*] GTKWave Analyzer v3.3.104 (w)1999-2020 BSI
+[*] Lab1 divider_tb default layout
+[timestart] 0
+[size] 1400 900
+[pos] -1 -1
+*-2.000000 0 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[sst_width] 233
+[signals_width] 240
+[sst_expanded] 1
+@28
+divider_tb.clk
+divider_tb.rst
+divider_tb.start
+divider_tb.done
+@22
+divider_tb.dividend[3:0]
+divider_tb.divisor[3:0]
+divider_tb.dut.M[3:0]
+divider_tb.dut.R[4:0]
+divider_tb.dut.D[3:0]
+divider_tb.dut.cnt[3:0]
