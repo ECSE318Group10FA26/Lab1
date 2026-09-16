@@ -1,0 +1,8 @@
+# ModelSim artifacts (generated inside each problem directory)
+work/
+transcript*
+*.wlf
+*.vcd
+
+# nix
+.direnv/
