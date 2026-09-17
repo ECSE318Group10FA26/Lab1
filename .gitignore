@@ -3,6 +3,7 @@ work/
 transcript*
 *.wlf
 *.vcd
+*.gtkw
 
 # nix
 .direnv/

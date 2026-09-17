@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-# ==========================================================================
 # sim.sh - compile and simulate a problem using the ModelSim docker image
 #
 # Usage:  ./sim.sh [problem-dir]        e.g.  ./sim.sh problem1
@@ -7,8 +6,8 @@
 #
 # The problem directory must contain a problem.env defining SOURCES,
 # TB_SOURCE and TB_TOP (see problem1/problem.env for a template).
+# LIB_DIRS is optional: each directory's *.v files are appended to SOURCES.
 # Output (work/, transcript.log, VCD) lands inside the problem directory.
-# ==========================================================================
 set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -38,6 +37,19 @@ source "$ENV_FILE"
 : "${SOURCES:?problem.env must define SOURCES}"
 : "${TB_SOURCE:?problem.env must define TB_SOURCE}"
 : "${TB_TOP:?problem.env must define TB_TOP}"
+
+# expand optional library directories: each directory's *.v files are
+# appended to SOURCES (alphabetical order within a directory)
+for d in ${LIB_DIRS:-}; do
+    if [ ! -d "$PROBLEM_DIR/$d" ]; then
+        echo "error: library directory '$d' (from LIB_DIRS) not found in $PROBLEM_DIR" >&2
+        exit 1
+    fi
+    for g in "$PROBLEM_DIR/$d"/*.v; do
+        [ -e "$g" ] || continue    # directory has no .v files
+        SOURCES="$SOURCES ${g#"$PROBLEM_DIR"/}"
+    done
+done
 
 # sanity-check that all sources exist
 for f in $SOURCES "$TB_SOURCE"; do

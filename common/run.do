@@ -1,5 +1,4 @@
-# ==========================================================================
-# common/run.do - generic ModelSim batch script, shared by all problems.
+# common/run.do - generic ModelSim batch script
 #
 # Driven by environment variables exported by sim.sh (which loads them from
 # the problem's problem.env):
@@ -10,7 +9,6 @@
 #
 # All paths are relative to the problem directory, which is the working
 # directory when this script runs inside the container.
-# ==========================================================================
 
 if {![info exists env(SOURCES)] || ![info exists env(TB_SOURCE)] || ![info exists env(TB_TOP)]} {
     puts "error: SOURCES, TB_SOURCE and TB_TOP must be set - run via ./sim.sh, not directly"
