@@ -2,8 +2,9 @@
 work/
 transcript*
 *.wlf
-*.vcd
-*.gtkw
+sim/
 
 # nix
 .direnv/
+result
+out
