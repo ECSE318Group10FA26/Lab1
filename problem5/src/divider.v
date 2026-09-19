@@ -24,53 +24,53 @@
 // ==========================================================================
 
 module divider #(
-    parameter N = 4                     // operand width (M and D)
+    parameter int N = 4  // operand width (M and D)
 ) (
     input  wire         clk,
-    input  wire         rst,            // synchronous reset
-    input  wire         start,          // pulse high to begin a division
+    input  wire         rst,        // synchronous reset
+    input  wire         start,      // pulse high to begin a division
     input  wire [N-1:0] dividend,
     input  wire [N-1:0] divisor,
     output wire [N-1:0] quotient,
-    output wire [N:0]   remainder,
+    output wire [  N:0] remainder,
     output reg          done
 );
 
-    // ------------------------------------------------------------------
-    // Registers
-    // ------------------------------------------------------------------
-    reg  [N-1:0] M;                     // divisor
-    reg  [N:0]   R;                     // partial remainder (extra sign bit)
-    reg  [N-1:0] D;                     // dividend -> quotient
-    reg  [3:0]   cnt;                   // cycle counter (enough for N <= 15)
+  // ------------------------------------------------------------------
+  // Registers
+  // ------------------------------------------------------------------
+  reg [N-1:0] M;  // divisor
+  reg [  N:0] R;  // partial remainder (extra sign bit)
+  reg [N-1:0] D;  // dividend -> quotient
+  reg [  3:0] cnt;  // cycle counter (enough for N <= 15)
 
-    // ------------------------------------------------------------------
-    // Control FSM
-    // ------------------------------------------------------------------
-    // TODO: state encoding, e.g.
-    //   localparam IDLE = 2'd0, RUN = 2'd1, CORRECT = 2'd2, FINISH = 2'd3;
-    //   reg [1:0] state;
+  // ------------------------------------------------------------------
+  // Control FSM
+  // ------------------------------------------------------------------
+  // TODO: state encoding, e.g.
+  //   localparam IDLE = 2'd0, RUN = 2'd1, CORRECT = 2'd2, FINISH = 2'd3;
+  //   reg [1:0] state;
 
-    assign quotient  = D;
-    assign remainder = R;
+  assign quotient  = D;
+  assign remainder = R;
 
-    // ------------------------------------------------------------------
-    // Datapath + control
-    // ------------------------------------------------------------------
-    // TODO:
-    //   - IDLE:    on start, load M, D; clear R; load CNT
-    //   - RUN:     shift {R,D} left 1 bit; add/sub M based on sign of R;
-    //              shift quotient bit into D[0]; decrement CNT
-    //   - CORRECT: fix last quotient bit / restore remainder if R < 0
-    //   - FINISH:  assert done, return to IDLE
-    // ------------------------------------------------------------------
-    always @(posedge clk) begin
-        if (rst) begin
-            // TODO: reset registers, done <= 0
-            done <= 1'b0;
-        end else begin
-            // TODO: FSM + datapath
-        end
+  // ------------------------------------------------------------------
+  // Datapath + control
+  // ------------------------------------------------------------------
+  // TODO:
+  //   - IDLE:    on start, load M, D; clear R; load CNT
+  //   - RUN:     shift {R,D} left 1 bit; add/sub M based on sign of R;
+  //              shift quotient bit into D[0]; decrement CNT
+  //   - CORRECT: fix last quotient bit / restore remainder if R < 0
+  //   - FINISH:  assert done, return to IDLE
+  // ------------------------------------------------------------------
+  always @(posedge clk) begin
+    if (rst) begin
+      // TODO: reset registers, done <= 0
+      done <= 1'b0;
+    end else begin
+      // TODO: FSM + datapath
     end
+  end
 
 endmodule

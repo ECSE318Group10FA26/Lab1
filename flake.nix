@@ -1,24 +1,76 @@
 {
-  description = "ECSE 318 Lab 1 - non-restoring divider (ModelSim via podman, GTKWave for viewing)";
+  description = "ECSE 318 Lab 1";
 
-  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+  inputs = {
+    flake-utils.url = "github:numtide/flake-utils";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    treefmt-nix.url = "github:numtide/treefmt-nix";
+  };
 
-  outputs = { self, nixpkgs }:
-    let
-      systems = [ "x86_64-linux" "aarch64-linux" ];
-      forAllSystems = nixpkgs.lib.genAttrs systems;
-    in
-    {
-      devShells = forAllSystems (system:
-        let
-          pkgs = nixpkgs.legacyPackages.${system};
-        in
-        {
+  outputs =
+    { self, ... }@inputs:
+    inputs.flake-utils.lib.eachDefaultSystem (
+      system:
+      let
+        pkgs = inputs.nixpkgs.legacyPackages.${system};
+        treefmtconfig = inputs.treefmt-nix.lib.evalModule pkgs {
+          projectRootFile = "flake.nix";
+          programs = {
+            mdformat = {
+              enable = true;
+              plugins = ps: [
+                ps.mdformat-gfm
+                ps.mdformat-frontmatter
+              ];
+              settings = {
+                wrap = 88;
+                end-of-line = "lf";
+              };
+            };
+            shellcheck.enable = true;
+            shfmt.enable = true;
+            nixfmt.enable = true;
+          };
+          settings.formatter = {
+            verible-verilog-format = {
+              command = "${pkgs.verible}/bin/verible-verilog-format";
+              options = [ "--inplace" ];
+              includes = [
+                "*.v"
+                "*.sv"
+                "*.vh"
+                "*.svh"
+              ];
+            };
+            verible-verilog-lint = {
+              command = "${pkgs.verible}/bin/verible-verilog-lint";
+              # Use --autofix=inplace to let treefmt apply fixable lint rules automatically
+              options = [ "--autofix=inplace" ];
+              includes = [
+                "*.v"
+                "*.sv"
+                "*.vh"
+                "*.svh"
+              ];
+              # excludes = [
+              #   "common/lib/*.v"
+              # ];
+            };
+            shellcheck.excludes = [
+              ".envrc"
+            ];
+          };
+        };
+      in
+      {
+        formatter = treefmtconfig.config.build.wrapper;
+        devShells = {
           default = pkgs.mkShell {
             packages = with pkgs; [
-              gtkwave # waveform viewer for sim/divider_tb.vcd
+              gtkwave
               nil
               nixd
+              verible
             ];
 
             # NOTE: podman is intentionally NOT included here. Rootless
@@ -26,11 +78,12 @@
             # podman that modelsim.sh / sim.sh already rely on.
 
             shellHook = ''
-              echo "Lab1 dev shell: gtkwave available."
+              echo "Lab1 dev shell."
               echo "  ./sim.sh  problemN   - compile + simulate problem N in the ModelSim container"
               echo "  ./wave.sh problemN   - simulate problem N, then open waveforms in gtkwave"
             '';
           };
-        });
-    };
+        };
+      }
+    );
 }

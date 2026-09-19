@@ -4,7 +4,7 @@
 
 module dff_sc #(
     // register width in bits
-    parameter N = 1
+    parameter int N = 1
 ) (
     input  wire         clk,
     // synchronous clear
@@ -12,10 +12,8 @@ module dff_sc #(
     input  wire [N-1:0] d,
     output reg  [N-1:0] q
 );
-    always @(posedge clk) begin
-        if (clear)
-            q <= {N{1'b0}};
-        else
-            q <= d;
-    end
+  always @(posedge clk) begin
+    if (clear) q <= {N{1'b0}};
+    else q <= d;
+  end
 endmodule
