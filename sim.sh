@@ -37,7 +37,11 @@ fi
 # shellcheck disable=SC1090
 source "$ENV_FILE"
 
-: "${SOURCES:?problem.env must define SOURCES}"
+# at least one of SOURCES / LIB_DIRS must provide design sources
+if [ -z "${SOURCES:-}" ] && [ -z "${LIB_DIRS:-}" ]; then
+  echo "error: problem.env must define SOURCES or LIB_DIRS" >&2
+  exit 1
+fi
 : "${TB_SOURCE:?problem.env must define TB_SOURCE}"
 : "${TB_TOP:?problem.env must define TB_TOP}"
 

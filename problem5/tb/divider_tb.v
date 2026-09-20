@@ -18,6 +18,10 @@ module divider_tb;
 
   localparam int N = 4;
 
+  // clock half-period, in `timescale units (5 -> 100 MHz); increase if the
+  // datapath is given gate delays so the per-cycle logic can settle
+  localparam int CLK_HALF = 5;
+
   reg             clk;
   reg             rst;
   reg             start;
@@ -43,9 +47,9 @@ module divider_tb;
       .done     (done)
   );
 
-  // 100 MHz clock
+  // clock (CLK_HALF ns half-period; 100 MHz at the default 5)
   initial clk = 1'b0;
-  always #5 clk = ~clk;
+  always #(CLK_HALF) clk = ~clk;
 
   // ----------------------------------------------------------------------
   // run_test: apply one division, wait for done, check results
@@ -114,7 +118,7 @@ module divider_tb;
   // Waveform dump (view with: vsim -view vsim.wlf, or convert with wlf2vcd)
   initial begin
     $dumpfile("sim/divider_tb.vcd");
-    $dumpvars(0, divider_tb);
+    $dumpvars(0);
   end
 
 endmodule

@@ -2,12 +2,18 @@
 //
 //   buf1 #(N)    : y = a
 //   not1 #(N)    : y = ~a
+//   shift_ext    : y = W'(w) << S  (place word at bit offset S, zero-filled)
 //   and2 #(N)    : y = a & b
 //   or2  #(N)    : y = a | b
 //   and_n #(N,I) : y = AND of the I packed input words (word k = d[k*N +: N])
 //   or_n  #(N,I) : y = OR  of the I packed input words
 //   and_2n #(N,I): y = AND of I packed words (minimal recursive binary tree)
 //   or_2n  #(N,I): y = OR  of 2**I packed words (recursive binary tree)
+//
+// Every logic cell takes an optional delay parameter D (in `timescale
+// units, default 0) applied to its gate primitives; composites forward D to
+// their children, so setting D once at the top level covers the whole tree.
+// buf1 and shift_ext are pure wiring cells: they are always zero-delay.
 
 // Wide N-sized buffer
 module buf1 #(
@@ -26,10 +32,58 @@ module buf1 #(
 endmodule
 
 
+// Shift-and-extend wiring cell: y = W'(w) << S
+//
+// Places an N-bit word at bit offset S of a W-bit container; all other bits
+// are tied to 0. Content bits that would land at or above bit W are dropped
+// (callers must know they are provably zero, as in csa_stack's schedules).
+module shift_ext #(
+    // data width of the input word, in bits
+    parameter int N = 1,
+    // left shift (bit offset of the word inside the container)
+    parameter int S = 0,
+    // container width in bits
+    parameter int W = N + S
+) (
+    input  wire [N-1:0] w,
+    output wire [W-1:0] y
+);
+  // content bits that fit in the container
+  localparam int NB = (N + S > W) ? W - S : N;
+
+  if (S > 0) begin : g_lo
+    buf1 #(
+        .N(S)
+    ) gen_z (
+        .a({S{1'b0}}),
+        .y(y[0+:S])
+    );
+  end
+
+  buf1 #(
+      .N(NB)
+  ) gen_w (
+      .a(w[0+:NB]),
+      .y(y[S+:NB])
+  );
+
+  if (W > S + NB) begin : g_hi
+    buf1 #(
+        .N(W - S - NB)
+    ) gen_z (
+        .a({(W - S - NB) {1'b0}}),
+        .y(y[S+NB+:(W-S-NB)])
+    );
+  end
+endmodule
+
+
 // Wide N-sized NOT gate
 module not1 #(
     // data width of input, in bits
-    parameter int N = 1
+    parameter int N = 1,
+    // gate delay, in `timescale units
+    parameter int D = 0
 ) (
     input  wire [N-1:0] a,
     output wire [N-1:0] y
@@ -37,7 +91,7 @@ module not1 #(
   genvar i;
   generate
     for (i = 0; i < N; i = i + 1) begin : g_bit
-      not (y[i], a[i]);
+      not #(D) (y[i], a[i]);
     end
   endgenerate
 endmodule
@@ -46,7 +100,9 @@ endmodule
 // Wide N-sized AND gate
 module and2 #(
     // data width of each input, in bits
-    parameter int N = 1
+    parameter int N = 1,
+    // gate delay, in `timescale units
+    parameter int D = 0
 ) (
     input  wire [N-1:0] a,
     input  wire [N-1:0] b,
@@ -55,7 +111,7 @@ module and2 #(
   genvar i;
   generate
     for (i = 0; i < N; i = i + 1) begin : g_bit
-      and (y[i], a[i], b[i]);
+      and #(D) (y[i], a[i], b[i]);
     end
   endgenerate
 endmodule
@@ -64,7 +120,9 @@ endmodule
 // Wide N-sized OR gate
 module or2 #(
     // data width of each input, in bits
-    parameter int N = 1
+    parameter int N = 1,
+    // gate delay, in `timescale units
+    parameter int D = 0
 ) (
     input  wire [N-1:0] a,
     input  wire [N-1:0] b,
@@ -73,7 +131,7 @@ module or2 #(
   genvar i;
   generate
     for (i = 0; i < N; i = i + 1) begin : g_bit
-      or (y[i], a[i], b[i]);
+      or #(D) (y[i], a[i], b[i]);
     end
   endgenerate
 endmodule
@@ -82,7 +140,9 @@ endmodule
 // Wide N-sized XOR gate
 module xor2 #(
     // data width of each input, in bits
-    parameter int N = 1
+    parameter int N = 1,
+    // gate delay, in `timescale units
+    parameter int D = 0
 ) (
     input  wire [N-1:0] a,
     input  wire [N-1:0] b,
@@ -91,7 +151,7 @@ module xor2 #(
   genvar i;
   generate
     for (i = 0; i < N; i = i + 1) begin : g_bit
-      xor (y[i], a[i], b[i]);
+      xor #(D) (y[i], a[i], b[i]);
     end
   endgenerate
 endmodule
@@ -100,7 +160,9 @@ endmodule
 // Wide N-sized NAND gate
 module nand2 #(
     // data width of each input, in bits
-    parameter int N = 1
+    parameter int N = 1,
+    // gate delay, in `timescale units
+    parameter int D = 0
 ) (
     input  wire [N-1:0] a,
     input  wire [N-1:0] b,
@@ -109,7 +171,7 @@ module nand2 #(
   genvar i;
   generate
     for (i = 0; i < N; i = i + 1) begin : g_bit
-      nand (y[i], a[i], b[i]);
+      nand #(D) (y[i], a[i], b[i]);
     end
   endgenerate
 endmodule
@@ -118,7 +180,9 @@ endmodule
 // Wide N-sized NOR gate
 module nor2 #(
     // data width of each input, in bits
-    parameter int N = 1
+    parameter int N = 1,
+    // gate delay, in `timescale units
+    parameter int D = 0
 ) (
     input  wire [N-1:0] a,
     input  wire [N-1:0] b,
@@ -127,7 +191,7 @@ module nor2 #(
   genvar i;
   generate
     for (i = 0; i < N; i = i + 1) begin : g_bit
-      nor (y[i], a[i], b[i]);
+      nor #(D) (y[i], a[i], b[i]);
     end
   endgenerate
 endmodule
@@ -142,7 +206,9 @@ module and_n #(
     // bits per input word
     parameter int N = 1,
     // number of input words
-    parameter int I = 2
+    parameter int I = 2,
+    // gate delay, in `timescale units
+    parameter int D = 0
 ) (
     // packed inputs: word k = d[k*N +: N]
     input  wire [I*N-1:0] d,
@@ -159,7 +225,7 @@ module and_n #(
   genvar k;
   generate
     for (k = 0; k < I; k = k + 1) begin : g_and
-      and2 #(N) a (
+      and2 #(N, D) a (
           .a(chain[k*N+:N]),
           .b(d[k*N+:N]),
           .y(chain[(k+1)*N+:N])
@@ -183,7 +249,9 @@ module or_n #(
     // bits per input word
     parameter int N = 1,
     // number of input words
-    parameter int I = 2
+    parameter int I = 2,
+    // gate delay, in `timescale units
+    parameter int D = 0
 ) (
     // packed inputs: word k = d[k*N +: N]
     input  wire [I*N-1:0] d,
@@ -200,7 +268,7 @@ module or_n #(
   genvar k;
   generate
     for (k = 0; k < I; k = k + 1) begin : g_or
-      or2 #(N) o (
+      or2 #(N, D) o (
           .a(chain[k*N+:N]),
           .b(d[k*N+:N]),
           .y(chain[(k+1)*N+:N])
@@ -224,7 +292,9 @@ module xor_n #(
     // bits per input word
     parameter int N = 1,
     // number of input words
-    parameter int I = 2
+    parameter int I = 2,
+    // gate delay, in `timescale units
+    parameter int D = 0
 ) (
     // packed inputs: word k = d[k*N +: N]
     input  wire [I*N-1:0] d,
@@ -241,7 +311,7 @@ module xor_n #(
   genvar k;
   generate
     for (k = 0; k < I; k = k + 1) begin : g_xor
-      xor2 #(N) o (
+      xor2 #(N, D) o (
           .a(chain[k*N+:N]),
           .b(d[k*N+:N]),
           .y(chain[(k+1)*N+:N])
@@ -267,7 +337,9 @@ module and_2n #(
     // bits per input word
     parameter int N = 1,
     // number of input words
-    parameter int I = 2
+    parameter int I = 2,
+    // gate delay, in `timescale units
+    parameter int D = 0
 ) (
     // packed inputs: word k = d[k*N +: N]
     input  wire [I*N-1:0] d,
@@ -280,7 +352,7 @@ module and_2n #(
           .y(y)
       );
     end else if (I == 2) begin : g_base2
-      and2 #(N) g_and (
+      and2 #(N, D) g_and (
           .a(d[N-1:0]),
           .b(d[2*N-1:N]),
           .y(y)
@@ -290,20 +362,23 @@ module and_2n #(
       wire [N-1:0] lo, hi;
       and_2n #(
           .N(N),
-          .I(L)
+          .I(L),
+          .D(D)
       ) m_lo (
           .d(d[0+:L*N]),
           .y(lo)
       );
       and_2n #(
           .N(N),
-          .I(I - L)
+          .I(I - L),
+          .D(D)
       ) m_hi (
           .d(d[L*N+:(I-L)*N]),
           .y(hi)
       );
       and2 #(
-          .N(N)
+          .N(N),
+          .D(D)
       ) g_and (
           .a(lo),
           .b(hi),
@@ -325,7 +400,9 @@ module or_2n #(
     // bits per input word
     parameter int N = 1,
     // number of input words
-    parameter int I = 2
+    parameter int I = 2,
+    // gate delay, in `timescale units
+    parameter int D = 0
 ) (
     // packed inputs: word k = d[k*N +: N]
     input  wire [I*N-1:0] d,
@@ -338,7 +415,7 @@ module or_2n #(
           .y(y)
       );
     end else if (I == 2) begin : g_base2
-      or2 #(N) g_or (
+      or2 #(N, D) g_or (
           .a(d[N-1:0]),
           .b(d[2*N-1:N]),
           .y(y)
@@ -348,20 +425,23 @@ module or_2n #(
       wire [N-1:0] lo, hi;
       or_2n #(
           .N(N),
-          .I(L)
+          .I(L),
+          .D(D)
       ) m_lo (
           .d(d[0+:L*N]),
           .y(lo)
       );
       or_2n #(
           .N(N),
-          .I(I - L)
+          .I(I - L),
+          .D(D)
       ) m_hi (
           .d(d[L*N+:(I-L)*N]),
           .y(hi)
       );
       or2 #(
-          .N(N)
+          .N(N),
+          .D(D)
       ) g_or (
           .a(lo),
           .b(hi),
@@ -383,7 +463,9 @@ module xor_2n #(
     // bits per input word
     parameter int N = 1,
     // number of input words
-    parameter int I = 2
+    parameter int I = 2,
+    // gate delay, in `timescale units
+    parameter int D = 0
 ) (
     // packed inputs: word k = d[k*N +: N]
     input  wire [I*N-1:0] d,
@@ -396,7 +478,7 @@ module xor_2n #(
           .y(y)
       );
     end else if (I == 2) begin : g_base2
-      xor2 #(N) g_xor (
+      xor2 #(N, D) g_xor (
           .a(d[N-1:0]),
           .b(d[2*N-1:N]),
           .y(y)
@@ -406,20 +488,23 @@ module xor_2n #(
       wire [N-1:0] lo, hi;
       xor_2n #(
           .N(N),
-          .I(L)
+          .I(L),
+          .D(D)
       ) m_lo (
           .d(d[0+:L*N]),
           .y(lo)
       );
       xor_2n #(
           .N(N),
-          .I(I - L)
+          .I(I - L),
+          .D(D)
       ) m_hi (
           .d(d[L*N+:(I-L)*N]),
           .y(hi)
       );
       xor2 #(
-          .N(N)
+          .N(N),
+          .D(D)
       ) g_xor (
           .a(lo),
           .b(hi),
@@ -429,5 +514,5 @@ module xor_2n #(
   endgenerate
 endmodule
 
-module gates ();
+module gates;
 endmodule

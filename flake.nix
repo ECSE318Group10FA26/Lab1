@@ -52,9 +52,6 @@
                 "*.vh"
                 "*.svh"
               ];
-              # excludes = [
-              #   "common/lib/*.v"
-              # ];
             };
             shellcheck.excludes = [
               ".envrc"
@@ -71,11 +68,10 @@
               nil
               nixd
               verible
+              haskellPackages.sv2v
+              yosys
+              sv-lang
             ];
-
-            # NOTE: podman is intentionally NOT included here. Rootless
-            # podman needs host subuid/subgid setup, so use the system
-            # podman that modelsim.sh / sim.sh already rely on.
 
             shellHook = ''
               echo "Lab1 dev shell."

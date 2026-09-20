@@ -9,7 +9,9 @@
 // cout = carry[N-1]
 module carry_gen #(
     // operand width (number of carries generated)
-    parameter int N = 4
+    parameter int N = 4,
+    // gate delay, in `timescale units
+    parameter int D = 0
 ) (
     input  wire [N-1:0] p,      // bitwise propagate (a ^ b)
     input  wire [N-1:0] g,      // bitwise generate  (a & b)
@@ -34,7 +36,8 @@ module carry_gen #(
         end else begin : g_pg
           and_2n #(
               .N(1),
-              .I(i - k + 1)
+              .I(i - k + 1),
+              .D(D)
           ) a (
               .d({p[i:k+1], g[k]}),
               .y(term[k])
@@ -45,7 +48,8 @@ module carry_gen #(
       // term i+1: cin & p[0] & ... & p[i]
       and_2n #(
           .N(1),
-          .I(i + 2)
+          .I(i + 2),
+          .D(D)
       ) a_cin (
           .d({p[i:0], cin}),
           .y(term[i+1])
@@ -54,7 +58,8 @@ module carry_gen #(
       // carry[i] = OR of all i+2 terms
       or_2n #(
           .N(1),
-          .I(i + 2)
+          .I(i + 2),
+          .D(D)
       ) o (
           .d(term),
           .y(carry[i])

@@ -16,6 +16,12 @@ module adder_tb;
 
   localparam int N = 4;
 
+  // gate delay of the structural DUT, in `timescale units; when D > 0 the
+  // per-cycle logic (mux -> full adder, ~4 gates) needs CLK_HALF ~> 2*D
+  localparam int D = 0;
+  // clock half-period, in `timescale units (5 -> 100 MHz)
+  localparam int CLK_HALF = 5;
+
   reg             clk;
   reg             clear;
   reg             load;
@@ -36,7 +42,8 @@ module adder_tb;
 
   // DUTs - both models see exactly the same stimulus
   serial_adder_structural #(
-      .N(N)
+      .N(N),
+      .D(D)
   ) dut_structural (
       .clk   (clk),
       .clear (clear),
@@ -61,9 +68,9 @@ module adder_tb;
       .cout  (cout_b)
   );
 
-  // 100 MHz clock
+  // clock (CLK_HALF ns half-period; 100 MHz at the default 5)
   initial clk = 1'b0;
-  always #5 clk = ~clk;
+  always #(CLK_HALF) clk = ~clk;
 
   // run_test: perform one bit-serial addition with a+b+c and check both
   // models against the golden reference and against each other.
@@ -161,7 +168,7 @@ module adder_tb;
     $display("vectors tested : %0d", tests);
     if (errors == 0)
       $display("correctness    : PASS - both models match addend+augend+cin for every vector");
-    else $display("correctness    : %0d FAILURE(S) vs golden reference", errors);
+    else $display("correctness    : %0d FAILURE(S) vs reference", errors);
     if (mismatches == 0)
       $display(
           "equivalence    : PASS - structural and behavioral outputs identical for all %0d vectors",
@@ -179,7 +186,7 @@ module adder_tb;
   // Waveform dump
   initial begin
     $dumpfile("sim/adder_tb.vcd");
-    $dumpvars(0, adder_tb);
+    $dumpvars(0);
   end
 
 endmodule

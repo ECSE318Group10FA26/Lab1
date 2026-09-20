@@ -25,10 +25,12 @@ vlib work
 vmap work work
 
 # compile design sources in order, then the testbench
+# (-timescale gives the library modules a timeunit now that they carry gate
+# delays; testbenches declare their own `timescale, which takes precedence)
 foreach f $env(SOURCES) {
-    vlog -work work $f
+    vlog -sv -lint -warning error -timescale 1ns/1ps -work work $f
 }
-vlog -work work $env(TB_SOURCE)
+vlog -sv -lint -warning error -timescale 1ns/1ps -work work $env(TB_SOURCE)
 
 # simulate (no optimization, keep full visibility for waveforms)
 vsim -voptargs=+acc work.$env(TB_TOP)

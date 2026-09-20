@@ -7,7 +7,9 @@
 // cout = carry[N]
 module lookahead_adder #(
     // Width of inputs in bits
-    parameter int N = 4
+    parameter int N = 4,
+    // gate delay, in `timescale units
+    parameter int D = 0
 ) (
     input  wire         cin,     // initial carry, captured while operands load
     input  wire [N-1:0] addend,
@@ -20,7 +22,8 @@ module lookahead_adder #(
   wire [N-1:0] carry;
 
   and2 #(
-      .N(N)
+      .N(N),
+      .D(D)
   ) and_gen (
       .a(addend),
       .b(augend),
@@ -28,7 +31,8 @@ module lookahead_adder #(
   );
 
   xor2 #(
-      .N(N)
+      .N(N),
+      .D(D)
   ) xor_prop (
       .a(addend),
       .b(augend),
@@ -36,7 +40,8 @@ module lookahead_adder #(
   );
 
   carry_gen #(
-      .N(N)
+      .N(N),
+      .D(D)
   ) cg (
       .p    (propagate),
       .g    (gen),
@@ -45,12 +50,25 @@ module lookahead_adder #(
       .cout (cout)
   );
 
-  xor2 #(
-      .N(N)
-  ) xor_res (
-      .a(propagate),
-      .b({carry[N-2:0], cin}),
-      .y(result)
-  );
+  // result[i] = p[i] ^ carry[i-1], with carry[-1] = cin
+  if (N == 1) begin : g_res1
+    xor2 #(
+        .N(1),
+        .D(D)
+    ) xor_res (
+        .a(propagate),
+        .b(cin),
+        .y(result)
+    );
+  end else begin : g_resn
+    xor2 #(
+        .N(N),
+        .D(D)
+    ) xor_res (
+        .a(propagate),
+        .b({carry[N-2:0], cin}),
+        .y(result)
+    );
+  end
 
 endmodule

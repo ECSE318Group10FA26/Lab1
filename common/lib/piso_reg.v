@@ -8,7 +8,9 @@
 
 module piso_reg #(
     // data width of register, in bits
-    parameter int N = 2
+    parameter int N = 2,
+    // gate delay, in `timescale units
+    parameter int D = 0
 ) (
     input  wire         clk,
     input  wire         clear,
@@ -22,7 +24,8 @@ module piso_reg #(
   // Mux input packing: input 0 in the low N bits, input 1 above it.
   mux #(
       .N(N),
-      .S(1)
+      .S(1),
+      .D(D)
   ) m (
       .d  ({d_in, {1'b0, q[N-1:1]}}),
       .sel(load),

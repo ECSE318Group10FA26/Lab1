@@ -12,7 +12,9 @@ module mux #(
     // data width of each input, in bits
     parameter int N = 1,
     // select width, in bits -> the mux has 2**S inputs
-    parameter int S = 1
+    parameter int S = 1,
+    // gate delay, in `timescale units
+    parameter int D = 0
 ) (
     // packed inputs: input k = d[k*N +: N]
     input  wire [(1<<S)*N-1:0] d,
@@ -25,18 +27,18 @@ module mux #(
       wire sel_n;
       wire [N-1:0] lo, hi;
 
-      not (sel_n, sel[0]);
-      and2 #(N) g_lo (
+      not #(D) (sel_n, sel[0]);
+      and2 #(N, D) g_lo (
           .a(d[N-1:0]),
           .b({N{sel_n}}),
           .y(lo)
       );
-      and2 #(N) g_hi (
+      and2 #(N, D) g_hi (
           .a(d[2*N-1:N]),
           .b({N{sel[0]}}),
           .y(hi)
       );
-      or2 #(N) g_or (
+      or2 #(N, D) g_or (
           .a(lo),
           .b(hi),
           .y(y)
@@ -48,7 +50,8 @@ module mux #(
 
       mux #(
           .N(N),
-          .S(S - 1)
+          .S(S - 1),
+          .D(D)
       ) m_lo (
           .d  (d[0+:H*N]),
           .sel(sel[S-2:0]),
@@ -56,7 +59,8 @@ module mux #(
       );
       mux #(
           .N(N),
-          .S(S - 1)
+          .S(S - 1),
+          .D(D)
       ) m_hi (
           .d  (d[H*N+:H*N]),
           .sel(sel[S-2:0]),
@@ -64,7 +68,8 @@ module mux #(
       );
       mux #(
           .N(N),
-          .S(1)
+          .S(1),
+          .D(D)
       ) m_top (
           .d  ({hi, lo}),
           .sel(sel[S-1]),

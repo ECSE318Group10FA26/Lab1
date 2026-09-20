@@ -17,7 +17,9 @@
 
 // Serial Adder - structural implementation
 module serial_adder_structural #(
-    parameter int N = 4
+    parameter int N = 4,
+    // gate delay, in `timescale units
+    parameter int D = 0
 ) (
     input  wire         clk,
     input  wire         clear,   // clears the carry register (starts an add)
@@ -37,7 +39,8 @@ module serial_adder_structural #(
 
   // operand registers (shift toward the LSB while adding)
   piso_reg #(
-      .N(N)
+      .N(N),
+      .D(D)
   ) reg_addend (
       .clk  (clk),
       .clear(clear),
@@ -47,7 +50,8 @@ module serial_adder_structural #(
   );
 
   piso_reg #(
-      .N(N)
+      .N(N),
+      .D(D)
   ) reg_augend (
       .clk  (clk),
       .clear(clear),
@@ -57,7 +61,7 @@ module serial_adder_structural #(
   );
 
   // the single adder shared by all bit positions
-  full_adder fa (
+  full_adder #(D) fa (
       .a   (a_q[0]),
       .b   (b_q[0]),
       .cin (carry_q),
@@ -70,7 +74,8 @@ module serial_adder_structural #(
   // cycles it stores the CARRY from one bit position to the next.
   mux #(
       .N(1),
-      .S(1)
+      .S(1),
+      .D(D)
   ) carry_sel (
       .d  ({cin, carry_d}),  // input 0 = carry from adder, input 1 = cin
       .sel(load),

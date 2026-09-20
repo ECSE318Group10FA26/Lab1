@@ -6,12 +6,17 @@
 #
 # VCD_FILE / GTKW_SAVE come from the problem's problem.env. If WAVES is
 # defined there, the .gtkw layout is (re)generated from it on every run
-# (see problem1/problem.env for the syntax). Otherwise a pre-made
+# (see problem1/problem.env for the syntax; display formats are hex, dec,
+# bin, oct and ascii). Otherwise a pre-made
 # GTKW_SAVE file is used if it exists (save over it from gtkwave's File
 # menu to keep your own layout).
 #
 # --no-gui runs the simulation and (re)generates the .gtkw but does not
 # launch gtkwave (useful for testing or headless shells).
+#
+# Before viewing, the VCD is converted to a compressed FST next to it
+# (vcd2fst --compress) - gtkwave loads FST much faster than VCD. If vcd2fst
+# is not available the raw VCD is opened instead.
 set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -50,6 +55,19 @@ GTKW="$PROBLEM_DIR/${GTKW_SAVE:-}"
 if [ ! -s "$VCD" ]; then
   echo "error: $VCD was not produced - does \$dumpfile in the testbench match VCD_FILE?" >&2
   exit 1
+fi
+
+# ----------------------------------------------------------------------
+# convert the VCD to a compressed FST (gtkwave loads FST much faster)
+# ----------------------------------------------------------------------
+WAVE="$VCD"
+if command -v vcd2fst >/dev/null 2>&1; then
+  FST="${VCD%.vcd}.fst"
+  echo "==> vcd2fst --compress ${VCD#"$REPO_ROOT"/} ${FST#"$REPO_ROOT"/}"
+  vcd2fst --compress "$VCD" "$FST"
+  WAVE="$FST"
+else
+  echo "note: vcd2fst not found - opening the uncompressed VCD" >&2
 fi
 
 # ----------------------------------------------------------------------
@@ -103,11 +121,18 @@ if [ -n "${WAVES:-}" ]; then
         fmt='hex'
         ;;
       esac
+      # GTKWave trace flags are a hex bitmask: 0x20 right-justifies the
+      # signal name, and the data format is OR'd in as a bit:
+      #   hex=0x02  dec=0x04  bin=0x08  oct=0x10  ascii=0x800
       case "$fmt" in
-      hex) flag='@28' ;;
-      dec) flag='@22' ;;
+      hex) flag='@22' ;;
+      dec) flag='@24' ;;
+      bin) flag='@28' ;;
+      oct) flag='@30' ;;
+      ascii) flag='@820' ;;
       *)
-        echo "error: unknown wave format '$fmt' in WAVES entry '$w' (use hex or dec)" >&2
+        echo "error: unknown wave format '$fmt' in WAVES entry '$w'" >&2
+        echo "       (use hex, dec, bin, oct or ascii)" >&2
         exit 1
         ;;
       esac
@@ -129,12 +154,12 @@ fi
 if ! command -v gtkwave >/dev/null 2>&1; then
   echo "gtkwave not found in PATH."
   echo "  enter the dev shell first:  nix develop"
-  echo "  then view manually:         gtkwave $VCD"
+  echo "  then view manually:         gtkwave $WAVE"
   exit 0
 fi
 
 if [ -f "$GTKW" ]; then
-  gtkwave "$VCD" "$GTKW" &
+  gtkwave "$WAVE" "$GTKW" &
 else
-  gtkwave "$VCD" &
+  gtkwave "$WAVE" &
 fi
