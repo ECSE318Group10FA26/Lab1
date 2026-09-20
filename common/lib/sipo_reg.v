@@ -8,7 +8,8 @@
 
 module sipo_reg #(
     // data width of register, in bits
-    parameter int N = 2
+    parameter int N = 2,
+    parameter int DD = 0
 ) (
     input  wire         clk,
     input  wire         clear,
@@ -17,7 +18,8 @@ module sipo_reg #(
 );
   // next state: sin enters at the MSB, the rest shifts toward the LSB
   dff_sc #(
-      .N(N)
+      .N(N),
+      .D(DD)
   ) ff (
       .clk  (clk),
       .clear(clear),

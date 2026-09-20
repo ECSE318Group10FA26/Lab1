@@ -1,25 +1,19 @@
 // Bit-serial adder
 //
-// A single full adder computes the SUM one bit at a time, least significant
-// bit first. At time t the CARRY is stored in a 1-bit register; at time t+1
-// the adder uses CARRY[t] to form the next SUM bit. An n-bit add takes
-// n clock cycles.
+// A single full adder computes the sum one bit at a time from LSB
 //
 //   - addend / augend : n-bit piso registers (LSB first)
 //   - result          : n-bit sipo (SUM bit enters at the MSB)
 //   - carry register  : 1-bit register; initialized with cin when the
 //                       operands load then stores the CARRY between bit cycles
-//
-//   serial_adder_structural : structural model, depends: common/lib
-//                             (mux, dff_sc, full_adder, piso_reg, sipo_reg)
-//   serial_adder_behavioral : behavioral model
 
 
 // Serial Adder - structural implementation
 module serial_adder_structural #(
     parameter int N = 4,
     // gate delay, in `timescale units
-    parameter int D = 0
+    parameter int D = 0,
+    parameter int DD = 0
 ) (
     input  wire         clk,
     input  wire         clear,   // clears the carry register (starts an add)
@@ -69,9 +63,7 @@ module serial_adder_structural #(
       .cout(carry_d)
   );
 
-  // carry register (1-bit, CLEAR). While the operands load it captures
-  // cin (the role of the SET/CLEAR pins in Fig 4(a)); during the n shift
-  // cycles it stores the CARRY from one bit position to the next.
+  // carry register
   mux #(
       .N(1),
       .S(1),
@@ -91,7 +83,8 @@ module serial_adder_structural #(
 
   // result register (SUM bit enters at the MSB)
   sipo_reg #(
-      .N(N)
+      .N(N),
+      .DD(DD)
   ) reg_result (
       .clk  (clk),
       .clear(clear),
@@ -99,5 +92,5 @@ module serial_adder_structural #(
       .q    (result)
   );
 
-  assign cout = carry_q;
+  buf (cout, carry_q);
 endmodule

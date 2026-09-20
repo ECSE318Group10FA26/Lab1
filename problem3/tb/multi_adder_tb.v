@@ -1,18 +1,18 @@
-`timescale 1ns / 1ps
-
 // Self-checking testbench for multi_adder (M words of N bits -> W-bit sum).
 //
-// Each multi_adder_check instance runs the dut and compares against a 64-bit golden sum.
+// Each multi_adder_check instance runs the dut and compares against a 64-bit sum.
+
+`timescale 1ns / 1ps
 
 module multi_adder_check #(
     parameter int N = 4,
     parameter int M = 9,
     parameter int RAND = 300,
     // gate delay of the DUT, in `timescale units
-    parameter int D = 10,
+    parameter int D = 1,
     // settle delay between driving inputs and sampling the result; must
     // exceed the DUT's worst-case propagation delay (grows with D and M)
-    parameter int SETTLE = 1000
+    parameter int SETTLE = 100
 );
   localparam int W = N + $clog2(M);
 
@@ -31,7 +31,6 @@ module multi_adder_check #(
   int unsigned errors = 0;
   int unsigned tests = 0;
 
-  // ---- propagation-delay measurement ----
   // check() drives all inputs to x and lets outputs go unknown before
   // applying each real vector
   time t_drive;

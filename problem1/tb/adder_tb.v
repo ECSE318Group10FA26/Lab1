@@ -1,14 +1,7 @@
 // Testbench for the bit-serial adder
 //
-//   (a/b) Correctness: both the structural and the behavioral model are
-//         checked against the golden reference {cout,sum} = addend+augend+cin.
-//   (c)   Equivalence: both models receive identical stimulus and their
-//         outputs are compared vector by vector (the structural model's
-//         result is sampled after its n shift/add cycles; the behavioral
-//         model holds its result, so both are compared at the same time).
-//
-// Stimulus: directed vectors (incl. the handout example 5 + 1 = 6),
-// followed by an exhaustive sweep of all 2^(2N+1) operand/cin combinations.
+// both the structural and the behavioral model are
+// checked against the reference {cout,sum} = addend+augend+cin
 
 `timescale 1ns / 1ps
 
@@ -34,7 +27,7 @@ module adder_tb;
   wire    [N-1:0] result_b;  // behavioral model (part b)
   wire            cout_b;
 
-  integer         errors;  // failures vs. the golden reference
+  integer         errors;  // failures vs. the reference
   integer         mismatches;  // structural vs. behavioral differences
   integer         tests;
   reg             verbose;  // module-level flag read by run_test
@@ -73,7 +66,7 @@ module adder_tb;
   always #(CLK_HALF) clk = ~clk;
 
   // run_test: perform one bit-serial addition with a+b+c and check both
-  // models against the golden reference and against each other.
+  // models against the reference and against each other.
   //   Prints a PASS line per vector while the module-level `verbose`
   //   flag is set; failures are always printed.
   task automatic run_test;
@@ -83,7 +76,7 @@ module adder_tb;
     reg [N:0] expected;
     reg ok_s, ok_b;
     begin
-      expected = a + b + {{(N - 1) {1'b0}}, c};  // golden reference (N+1 bits;
+      expected = a + b + {{(N - 1) {1'b0}}, c};  // reference (N+1 bits;
                                                  // c zero-extended to N bits)
 
       // clear the carry register

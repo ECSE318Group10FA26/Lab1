@@ -13,10 +13,6 @@
 #
 # --no-gui runs the simulation and (re)generates the .gtkw but does not
 # launch gtkwave (useful for testing or headless shells).
-#
-# Before viewing, the VCD is converted to a compressed FST next to it
-# (vcd2fst --compress) - gtkwave loads FST much faster than VCD. If vcd2fst
-# is not available the raw VCD is opened instead.
 set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -124,6 +120,7 @@ if [ -n "${WAVES:-}" ]; then
       # GTKWave trace flags are a hex bitmask: 0x20 right-justifies the
       # signal name, and the data format is OR'd in as a bit:
       #   hex=0x02  dec=0x04  bin=0x08  oct=0x10  ascii=0x800
+      # Theres documentation on some python website somewhere
       case "$fmt" in
       hex) flag='@22' ;;
       dec) flag='@24' ;;

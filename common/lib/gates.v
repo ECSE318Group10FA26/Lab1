@@ -10,10 +10,9 @@
 //   and_2n #(N,I): y = AND of I packed words (minimal recursive binary tree)
 //   or_2n  #(N,I): y = OR  of 2**I packed words (recursive binary tree)
 //
-// Every logic cell takes an optional delay parameter D (in `timescale
-// units, default 0) applied to its gate primitives; composites forward D to
-// their children, so setting D once at the top level covers the whole tree.
-// buf1 and shift_ext are pure wiring cells: they are always zero-delay.
+// Every logic cell takes an optional delay parameter D
+// applied to its gate primitives and children
+// buf1 and shift_ext are 0 delay
 
 // Wide N-sized buffer
 module buf1 #(
@@ -34,9 +33,8 @@ endmodule
 
 // Shift-and-extend wiring cell: y = W'(w) << S
 //
-// Places an N-bit word at bit offset S of a W-bit container; all other bits
-// are tied to 0. Content bits that would land at or above bit W are dropped
-// (callers must know they are provably zero, as in csa_stack's schedules).
+// Places an N-bit word at bit offset S of a W-bit container
+// all other bits are 0'd
 module shift_ext #(
     // data width of the input word, in bits
     parameter int N = 1,

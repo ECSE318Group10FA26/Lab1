@@ -4,8 +4,7 @@ module lookahead_adder_tb;
 
   localparam int N = 4;
 
-  // gate delay of the DUT, in `timescale units; when D > 0 the carry-lookahead
-  // logic (~3 gate levels) must settle within one clock period (2*CLK_HALF)
+  // gate delay of the DUT
   localparam int D = 0;
   // clock half-period, in `timescale units (5 -> 100 MHz)
   localparam int CLK_HALF = 5;
@@ -18,7 +17,7 @@ module lookahead_adder_tb;
   wire    [N-1:0] result;
   wire            cout;
 
-  integer         errors;  // failures vs. the golden reference
+  integer         errors;  // failures vs. the reference
   integer         tests;
   reg             verbose;  // module-level flag read by run_test
                             // (Verilog-2001 has no bool type: use a reg)
@@ -34,12 +33,11 @@ module lookahead_adder_tb;
       .cout  (cout)
   );
 
-  // clock (CLK_HALF ns half-period; 100 MHz at the default 5)
   initial clk = 1'b0;
   always #(CLK_HALF) clk = ~clk;
 
-  // run_test: perform one bit-serial addition with a+b+c and check both
-  // models against the golden reference and against each other.
+  // perform one bit-serial addition with a+b+c and check both
+  // models against the reference and against each other.
   //   Prints a PASS line per vector while the module-level `verbose`
   //   flag is set; failures are always printed.
   task automatic run_test;
@@ -49,8 +47,7 @@ module lookahead_adder_tb;
     reg [N:0] expected;
     reg ok;
     begin
-      expected = a + b + {{(N - 1) {1'b0}}, c};  // golden reference (N+1 bits;
-                                                 // c zero-extended to N bits)
+      expected = a + b + {{(N - 1) {1'b0}}, c};  // reference
 
       // clear the carry register
       @(negedge clk);
