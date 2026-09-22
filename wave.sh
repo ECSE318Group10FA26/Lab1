@@ -18,10 +18,12 @@ set -euo pipefail
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 NO_GUI=0
+RUN_SIM=1
 ARGS=()
 for a in "$@"; do
   case "$a" in
   --no-gui) NO_GUI=1 ;;
+  --no-sim) RUN_SIM=0 ;;
   *) ARGS+=("$a") ;;
   esac
 done
@@ -43,7 +45,9 @@ source "$ENV_FILE"
 : "${VCD_FILE:?problem.env must define VCD_FILE}"
 
 # run the simulation (re)generating the VCD
-"$REPO_ROOT/sim.sh" "$PROBLEM_DIR"
+if [ "$RUN_SIM" -eq 1 ]; then
+  "$REPO_ROOT/sim.sh" "$PROBLEM_DIR"
+fi
 
 VCD="$PROBLEM_DIR/$VCD_FILE"
 GTKW="$PROBLEM_DIR/${GTKW_SAVE:-}"

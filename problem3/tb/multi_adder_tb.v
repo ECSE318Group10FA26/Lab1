@@ -83,6 +83,12 @@ module multi_adder_check #(
     // all ones (maximum sum -> width stress)
     in_vecs = '1;
     check();
+    if (N == 8 && M == 8) begin
+        in_vecs = 64'h0C0D05060708090F;
+        check();
+        in_vecs = 64'h030E05060708130A;
+        check();
+    end
     // walking single full word
     for (int k = 0; k < M; k++) begin
       in_vecs = '0;
@@ -143,10 +149,6 @@ module multi_adder_tb;
       .N(4),
       .M(9)
   ) c_4_9 ();
-  multi_adder_check #(
-      .N(8),
-      .M(9)
-  ) c_8_9 ();
   // sweep M at N = 8
   multi_adder_check #(
       .N(8),
@@ -180,6 +182,14 @@ module multi_adder_tb;
       .N(8),
       .M(8)
   ) c_8_8 ();
+  multi_adder_check #(
+      .N(8),
+      .M(9)
+  ) c_8_9 ();
+  multi_adder_check #(
+      .N(8),
+      .M(10)
+  ) c_8_10 ();
   multi_adder_check #(
       .N(8),
       .M(15)

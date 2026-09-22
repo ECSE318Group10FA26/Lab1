@@ -40,6 +40,7 @@ proc
 flatten
 delete t:\$scopeinfo
 opt_clean
+show -format svg -prefix $REPO_ROOT/problem3/sim/schematic$N
 stat
 ltp
 EOF
