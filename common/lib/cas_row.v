@@ -13,46 +13,46 @@ module cas_row #(
     // gate delay, in `timescale units
     parameter int D = 0
 ) (
-    input  wire [N:0]   pr,       // partial remainder in (bit N = sign)
+    input  wire [  N:0] pr,       // partial remainder in (bit N = sign)
     input  wire [N-1:0] divisor,  // divisor bits (sign cell gets b = 0)
     input  wire         op,       // row operation: 1 = subtract, 0 = add
     output wire [N-1:0] sum,      // row result, low N bits
     output wire         q         // quotient bit: carry-out of the sign cell
 );
-  wire [N:0] c;  // carry chain, rippling right to left; c[0] = op
-  // Intentionally ignore and throw away the sgn bit
-  `pragma diagnostic push
-  `pragma diagnostic ignore="-Wunused-but-set-net"
-  wire sgn;  // sign cell's sum bit
-  `pragma diagnostic pop
+    wire [N:0] c;  // carry chain, rippling right to left; c[0] = op
+    // Intentionally ignore and throw away the sgn bit
+    // slang lint_save
+    // slang lint_off unused-but-set-net
+    wire sgn;  // sign cell's sum bit
+    // slang lint_restore
 
-  buf (c[0], op);
+    buf (c[0], op);
 
-  genvar i;
-  generate
-    for (i = 0; i < N; i = i + 1) begin : g_cas
-      cas #(
-          .D(D)
-      ) u_cas (
-          .a   (pr[i]),
-          .b   (divisor[i]),
-          .cin (c[i]),
-          .op  (op),
-          .s   (sum[i]),
-          .cout(c[i+1])
-      );
-    end
-  endgenerate
+    genvar i;
+    generate
+        for (i = 0; i < N; i = i + 1) begin : g_cas
+            cas #(
+                .D(D)
+            ) u_cas (
+                .a   (pr[i]),
+                .b   (divisor[i]),
+                .cin (c[i]),
+                .op  (op),
+                .s   (sum[i]),
+                .cout(c[i+1])
+            );
+        end
+    endgenerate
 
-  // sign-extension cell (b = 0); its carry-out is the row's quotient bit
-  cas #(
-      .D(D)
-  ) u_sign (
-      .a   (pr[N]),
-      .b   (1'b0),
-      .cin (c[N]),
-      .op  (op),
-      .s   (sgn),
-      .cout(q)
-  );
+    // sign-extension cell (b = 0); its carry-out is the row's quotient bit
+    cas #(
+        .D(D)
+    ) u_sign (
+        .a   (pr[N]),
+        .b   (1'b0),
+        .cin (c[N]),
+        .op  (op),
+        .s   (sgn),
+        .cout(q)
+    );
 endmodule

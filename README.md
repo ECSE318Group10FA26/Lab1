@@ -52,4 +52,5 @@ Install the following programs for the rest of the development environment \[opt
 ### Notes
 
 - For problem 2, modify the `problem.env` to run the separate testbenches
-  - One testbench is called `lookahead_adder_tb` and the other is called `lookahead_adder_cp_tb`
+  - One testbench is called `lookahead_adder_tb` and the other is called
+    `lookahead_adder_cp_tb`

@@ -12,15 +12,15 @@ module cas #(
     output wire s,    // sum bit, down to the next row
     output wire cout  // carry out, to the cell on the left
 );
-  wire bx;  // b ^ op
+    wire bx;  // b ^ op
 
-  xor #(D) (bx, b, op);
+    xor #(D) (bx, b, op);
 
-  full_adder #(D) fa (
-      .a   (a),
-      .b   (bx),
-      .cin (cin),
-      .sum (s),
-      .cout(cout)
-  );
+    full_adder #(D) fa (
+        .a   (a),
+        .b   (bx),
+        .cin (cin),
+        .sum (s),
+        .cout(cout)
+    );
 endmodule

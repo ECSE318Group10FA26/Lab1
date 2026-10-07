@@ -22,12 +22,12 @@ module buf1 #(
     input  wire [N-1:0] a,
     output wire [N-1:0] y
 );
-  genvar i;
-  generate
-    for (i = 0; i < N; i = i + 1) begin : g_bit
-      buf (y[i], a[i]);
-    end
-  endgenerate
+    genvar i;
+    generate
+        for (i = 0; i < N; i = i + 1) begin : g_bit
+            buf (y[i], a[i]);
+        end
+    endgenerate
 endmodule
 
 
@@ -46,33 +46,33 @@ module shift_ext #(
     input  wire [N-1:0] w,
     output wire [W-1:0] y
 );
-  // content bits that fit in the container
-  localparam int NB = (N + S > W) ? W - S : N;
+    // content bits that fit in the container
+    localparam int NB = (N + S > W) ? W - S : N;
 
-  if (S > 0) begin : g_lo
+    if (S > 0) begin : g_lo
+        buf1 #(
+            .N(S)
+        ) gen_z (
+            .a({S{1'b0}}),
+            .y(y[0+:S])
+        );
+    end
+
     buf1 #(
-        .N(S)
-    ) gen_z (
-        .a({S{1'b0}}),
-        .y(y[0+:S])
+        .N(NB)
+    ) gen_w (
+        .a(w[0+:NB]),
+        .y(y[S+:NB])
     );
-  end
 
-  buf1 #(
-      .N(NB)
-  ) gen_w (
-      .a(w[0+:NB]),
-      .y(y[S+:NB])
-  );
-
-  if (W > S + NB) begin : g_hi
-    buf1 #(
-        .N(W - S - NB)
-    ) gen_z (
-        .a({(W - S - NB) {1'b0}}),
-        .y(y[S+NB+:(W-S-NB)])
-    );
-  end
+    if (W > S + NB) begin : g_hi
+        buf1 #(
+            .N(W - S - NB)
+        ) gen_z (
+            .a({(W - S - NB) {1'b0}}),
+            .y(y[S+NB+:(W-S-NB)])
+        );
+    end
 endmodule
 
 
@@ -86,12 +86,12 @@ module not1 #(
     input  wire [N-1:0] a,
     output wire [N-1:0] y
 );
-  genvar i;
-  generate
-    for (i = 0; i < N; i = i + 1) begin : g_bit
-      not #(D) (y[i], a[i]);
-    end
-  endgenerate
+    genvar i;
+    generate
+        for (i = 0; i < N; i = i + 1) begin : g_bit
+            not #(D) (y[i], a[i]);
+        end
+    endgenerate
 endmodule
 
 
@@ -106,12 +106,12 @@ module and2 #(
     input  wire [N-1:0] b,
     output wire [N-1:0] y
 );
-  genvar i;
-  generate
-    for (i = 0; i < N; i = i + 1) begin : g_bit
-      and #(D) (y[i], a[i], b[i]);
-    end
-  endgenerate
+    genvar i;
+    generate
+        for (i = 0; i < N; i = i + 1) begin : g_bit
+            and #(D) (y[i], a[i], b[i]);
+        end
+    endgenerate
 endmodule
 
 
@@ -126,12 +126,12 @@ module or2 #(
     input  wire [N-1:0] b,
     output wire [N-1:0] y
 );
-  genvar i;
-  generate
-    for (i = 0; i < N; i = i + 1) begin : g_bit
-      or #(D) (y[i], a[i], b[i]);
-    end
-  endgenerate
+    genvar i;
+    generate
+        for (i = 0; i < N; i = i + 1) begin : g_bit
+            or #(D) (y[i], a[i], b[i]);
+        end
+    endgenerate
 endmodule
 
 
@@ -146,12 +146,12 @@ module xor2 #(
     input  wire [N-1:0] b,
     output wire [N-1:0] y
 );
-  genvar i;
-  generate
-    for (i = 0; i < N; i = i + 1) begin : g_bit
-      xor #(D) (y[i], a[i], b[i]);
-    end
-  endgenerate
+    genvar i;
+    generate
+        for (i = 0; i < N; i = i + 1) begin : g_bit
+            xor #(D) (y[i], a[i], b[i]);
+        end
+    endgenerate
 endmodule
 
 
@@ -166,12 +166,12 @@ module nand2 #(
     input  wire [N-1:0] b,
     output wire [N-1:0] y
 );
-  genvar i;
-  generate
-    for (i = 0; i < N; i = i + 1) begin : g_bit
-      nand #(D) (y[i], a[i], b[i]);
-    end
-  endgenerate
+    genvar i;
+    generate
+        for (i = 0; i < N; i = i + 1) begin : g_bit
+            nand #(D) (y[i], a[i], b[i]);
+        end
+    endgenerate
 endmodule
 
 
@@ -186,12 +186,12 @@ module nor2 #(
     input  wire [N-1:0] b,
     output wire [N-1:0] y
 );
-  genvar i;
-  generate
-    for (i = 0; i < N; i = i + 1) begin : g_bit
-      nor #(D) (y[i], a[i], b[i]);
-    end
-  endgenerate
+    genvar i;
+    generate
+        for (i = 0; i < N; i = i + 1) begin : g_bit
+            nor #(D) (y[i], a[i], b[i]);
+        end
+    endgenerate
 endmodule
 
 
@@ -212,32 +212,32 @@ module and_n #(
     input  wire [I*N-1:0] d,
     output wire [  N-1:0] y
 );
-  // chain[k] = d[0] & ... & d[k-1]
-  wire [(I+1)*N-1:0] chain;
+    // chain[k] = d[0] & ... & d[k-1]
+    wire [(I+1)*N-1:0] chain;
 
-  buf1 #(N) seed (
-      .a({N{1'b1}}),
-      .y(chain[N-1:0])
-  );
+    buf1 #(N) seed (
+        .a({N{1'b1}}),
+        .y(chain[N-1:0])
+    );
 
-  genvar k;
-  generate
-    for (k = 0; k < I; k = k + 1) begin : g_and
-      and2 #(
-          .N(N),
-          .D(D)
-      ) a (
-          .a(chain[k*N+:N]),
-          .b(d[k*N+:N]),
-          .y(chain[(k+1)*N+:N])
-      );
-    end
-  endgenerate
+    genvar k;
+    generate
+        for (k = 0; k < I; k = k + 1) begin : g_and
+            and2 #(
+                .N(N),
+                .D(D)
+            ) a (
+                .a(chain[k*N+:N]),
+                .b(d[k*N+:N]),
+                .y(chain[(k+1)*N+:N])
+            );
+        end
+    endgenerate
 
-  buf1 #(N) out_buf (
-      .a(chain[I*N+:N]),
-      .y(y)
-  );
+    buf1 #(N) out_buf (
+        .a(chain[I*N+:N]),
+        .y(y)
+    );
 endmodule
 
 
@@ -258,32 +258,32 @@ module or_n #(
     input  wire [I*N-1:0] d,
     output wire [  N-1:0] y
 );
-  // chain[k] = d[0] | ... | d[k-1]
-  wire [(I+1)*N-1:0] chain;
+    // chain[k] = d[0] | ... | d[k-1]
+    wire [(I+1)*N-1:0] chain;
 
-  buf1 #(N) seed (
-      .a({N{1'b0}}),
-      .y(chain[N-1:0])
-  );
+    buf1 #(N) seed (
+        .a({N{1'b0}}),
+        .y(chain[N-1:0])
+    );
 
-  genvar k;
-  generate
-    for (k = 0; k < I; k = k + 1) begin : g_or
-      or2 #(
-          .N(N),
-          .D(D)
-      ) o (
-          .a(chain[k*N+:N]),
-          .b(d[k*N+:N]),
-          .y(chain[(k+1)*N+:N])
-      );
-    end
-  endgenerate
+    genvar k;
+    generate
+        for (k = 0; k < I; k = k + 1) begin : g_or
+            or2 #(
+                .N(N),
+                .D(D)
+            ) o (
+                .a(chain[k*N+:N]),
+                .b(d[k*N+:N]),
+                .y(chain[(k+1)*N+:N])
+            );
+        end
+    endgenerate
 
-  buf1 #(N) out_buf (
-      .a(chain[I*N+:N]),
-      .y(y)
-  );
+    buf1 #(N) out_buf (
+        .a(chain[I*N+:N]),
+        .y(y)
+    );
 endmodule
 
 
@@ -304,32 +304,32 @@ module xor_n #(
     input  wire [I*N-1:0] d,
     output wire [  N-1:0] y
 );
-  // chain[k] = d[0] | ... | d[k-1]
-  wire [(I+1)*N-1:0] chain;
+    // chain[k] = d[0] | ... | d[k-1]
+    wire [(I+1)*N-1:0] chain;
 
-  buf1 #(N) seed (
-      .a({N{1'b0}}),
-      .y(chain[N-1:0])
-  );
+    buf1 #(N) seed (
+        .a({N{1'b0}}),
+        .y(chain[N-1:0])
+    );
 
-  genvar k;
-  generate
-    for (k = 0; k < I; k = k + 1) begin : g_xor
-      xor2 #(
-          .N(N),
-          .D(D)
-      ) o (
-          .a(chain[k*N+:N]),
-          .b(d[k*N+:N]),
-          .y(chain[(k+1)*N+:N])
-      );
-    end
-  endgenerate
+    genvar k;
+    generate
+        for (k = 0; k < I; k = k + 1) begin : g_xor
+            xor2 #(
+                .N(N),
+                .D(D)
+            ) o (
+                .a(chain[k*N+:N]),
+                .b(d[k*N+:N]),
+                .y(chain[(k+1)*N+:N])
+            );
+        end
+    endgenerate
 
-  buf1 #(N) out_buf (
-      .a(chain[I*N+:N]),
-      .y(y)
-  );
+    buf1 #(N) out_buf (
+        .a(chain[I*N+:N]),
+        .y(y)
+    );
 endmodule
 
 
@@ -352,50 +352,50 @@ module and_2n #(
     input  wire [I*N-1:0] d,
     output wire [  N-1:0] y
 );
-  generate
-    if (I == 1) begin : g_base1
-      buf1 #(N) g_buf (
-          .a(d),
-          .y(y)
-      );
-    end else if (I == 2) begin : g_base2
-      and2 #(
-          .N(N),
-          .D(D)
-      ) g_and (
-          .a(d[N-1:0]),
-          .b(d[2*N-1:N]),
-          .y(y)
-      );
-    end else begin : g_rec
-      localparam int L = 1 << $clog2(I) - 1;
-      wire [N-1:0] lo, hi;
-      and_2n #(
-          .N(N),
-          .I(L),
-          .D(D)
-      ) m_lo (
-          .d(d[0+:L*N]),
-          .y(lo)
-      );
-      and_2n #(
-          .N(N),
-          .I(I - L),
-          .D(D)
-      ) m_hi (
-          .d(d[L*N+:(I-L)*N]),
-          .y(hi)
-      );
-      and2 #(
-          .N(N),
-          .D(D)
-      ) g_and (
-          .a(lo),
-          .b(hi),
-          .y(y)
-      );
-    end
-  endgenerate
+    generate
+        if (I == 1) begin : g_base1
+            buf1 #(N) g_buf (
+                .a(d),
+                .y(y)
+            );
+        end else if (I == 2) begin : g_base2
+            and2 #(
+                .N(N),
+                .D(D)
+            ) g_and (
+                .a(d[N-1:0]),
+                .b(d[2*N-1:N]),
+                .y(y)
+            );
+        end else begin : g_rec
+            localparam int L = 1 << $clog2(I) - 1;
+            wire [N-1:0] lo, hi;
+            and_2n #(
+                .N(N),
+                .I(L),
+                .D(D)
+            ) m_lo (
+                .d(d[0+:L*N]),
+                .y(lo)
+            );
+            and_2n #(
+                .N(N),
+                .I(I - L),
+                .D(D)
+            ) m_hi (
+                .d(d[L*N+:(I-L)*N]),
+                .y(hi)
+            );
+            and2 #(
+                .N(N),
+                .D(D)
+            ) g_and (
+                .a(lo),
+                .b(hi),
+                .y(y)
+            );
+        end
+    endgenerate
 endmodule
 
 
@@ -418,50 +418,50 @@ module or_2n #(
     input  wire [I*N-1:0] d,
     output wire [  N-1:0] y
 );
-  generate
-    if (I == 1) begin : g_base1
-      buf1 #(N) g_buf (
-          .a(d),
-          .y(y)
-      );
-    end else if (I == 2) begin : g_base2
-      or2 #(
-          .N(N),
-          .D(D)
-      ) g_or (
-          .a(d[N-1:0]),
-          .b(d[2*N-1:N]),
-          .y(y)
-      );
-    end else begin : g_rec
-      localparam int L = 1 << $clog2(I) - 1;
-      wire [N-1:0] lo, hi;
-      or_2n #(
-          .N(N),
-          .I(L),
-          .D(D)
-      ) m_lo (
-          .d(d[0+:L*N]),
-          .y(lo)
-      );
-      or_2n #(
-          .N(N),
-          .I(I - L),
-          .D(D)
-      ) m_hi (
-          .d(d[L*N+:(I-L)*N]),
-          .y(hi)
-      );
-      or2 #(
-          .N(N),
-          .D(D)
-      ) g_or (
-          .a(lo),
-          .b(hi),
-          .y(y)
-      );
-    end
-  endgenerate
+    generate
+        if (I == 1) begin : g_base1
+            buf1 #(N) g_buf (
+                .a(d),
+                .y(y)
+            );
+        end else if (I == 2) begin : g_base2
+            or2 #(
+                .N(N),
+                .D(D)
+            ) g_or (
+                .a(d[N-1:0]),
+                .b(d[2*N-1:N]),
+                .y(y)
+            );
+        end else begin : g_rec
+            localparam int L = 1 << $clog2(I) - 1;
+            wire [N-1:0] lo, hi;
+            or_2n #(
+                .N(N),
+                .I(L),
+                .D(D)
+            ) m_lo (
+                .d(d[0+:L*N]),
+                .y(lo)
+            );
+            or_2n #(
+                .N(N),
+                .I(I - L),
+                .D(D)
+            ) m_hi (
+                .d(d[L*N+:(I-L)*N]),
+                .y(hi)
+            );
+            or2 #(
+                .N(N),
+                .D(D)
+            ) g_or (
+                .a(lo),
+                .b(hi),
+                .y(y)
+            );
+        end
+    endgenerate
 endmodule
 
 
@@ -484,50 +484,50 @@ module xor_2n #(
     input  wire [I*N-1:0] d,
     output wire [  N-1:0] y
 );
-  generate
-    if (I == 1) begin : g_base1
-      buf1 #(N) g_buf (
-          .a(d),
-          .y(y)
-      );
-    end else if (I == 2) begin : g_base2
-      xor2 #(
-          .N(N),
-          .D(D)
-      ) g_xor (
-          .a(d[N-1:0]),
-          .b(d[2*N-1:N]),
-          .y(y)
-      );
-    end else begin : g_rec
-      localparam int L = 1 << $clog2(I) - 1;
-      wire [N-1:0] lo, hi;
-      xor_2n #(
-          .N(N),
-          .I(L),
-          .D(D)
-      ) m_lo (
-          .d(d[0+:L*N]),
-          .y(lo)
-      );
-      xor_2n #(
-          .N(N),
-          .I(I - L),
-          .D(D)
-      ) m_hi (
-          .d(d[L*N+:(I-L)*N]),
-          .y(hi)
-      );
-      xor2 #(
-          .N(N),
-          .D(D)
-      ) g_xor (
-          .a(lo),
-          .b(hi),
-          .y(y)
-      );
-    end
-  endgenerate
+    generate
+        if (I == 1) begin : g_base1
+            buf1 #(N) g_buf (
+                .a(d),
+                .y(y)
+            );
+        end else if (I == 2) begin : g_base2
+            xor2 #(
+                .N(N),
+                .D(D)
+            ) g_xor (
+                .a(d[N-1:0]),
+                .b(d[2*N-1:N]),
+                .y(y)
+            );
+        end else begin : g_rec
+            localparam int L = 1 << $clog2(I) - 1;
+            wire [N-1:0] lo, hi;
+            xor_2n #(
+                .N(N),
+                .I(L),
+                .D(D)
+            ) m_lo (
+                .d(d[0+:L*N]),
+                .y(lo)
+            );
+            xor_2n #(
+                .N(N),
+                .I(I - L),
+                .D(D)
+            ) m_hi (
+                .d(d[L*N+:(I-L)*N]),
+                .y(hi)
+            );
+            xor2 #(
+                .N(N),
+                .D(D)
+            ) g_xor (
+                .a(lo),
+                .b(hi),
+                .y(y)
+            );
+        end
+    endgenerate
 endmodule
 
 module gates;

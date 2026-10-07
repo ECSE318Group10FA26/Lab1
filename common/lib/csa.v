@@ -11,16 +11,16 @@ module csa #(
     output wire [N-1:0] s,
     output wire [N-1:0] c
 );
-  genvar i;
-  generate
-    for (i = 0; i < N; i = i + 1) begin : g_bit
-      full_adder #(D) fa (
-          .a(x[i]),
-          .b(y[i]),
-          .cin(z[i]),
-          .sum(s[i]),
-          .cout(c[i])
-      );
-    end
-  endgenerate
+    genvar i;
+    generate
+        for (i = 0; i < N; i = i + 1) begin : g_bit
+            full_adder #(D) fa (
+                .a(x[i]),
+                .b(y[i]),
+                .cin(z[i]),
+                .sum(s[i]),
+                .cout(c[i])
+            );
+        end
+    endgenerate
 endmodule

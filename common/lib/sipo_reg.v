@@ -16,14 +16,14 @@ module sipo_reg #(
     input  wire         sin,
     output wire [N-1:0] q
 );
-  // next state: sin enters at the MSB, the rest shifts toward the LSB
-  dff_sc #(
-      .N(N),
-      .D(DD)
-  ) ff (
-      .clk  (clk),
-      .clear(clear),
-      .d    ({sin, q[N-1:1]}),
-      .q    (q)
-  );
+    // next state: sin enters at the MSB, the rest shifts toward the LSB
+    dff_sc #(
+        .N(N),
+        .D(DD)
+    ) ff (
+        .clk  (clk),
+        .clear(clear),
+        .d    ({sin, q[N-1:1]}),
+        .q    (q)
+    );
 endmodule

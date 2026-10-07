@@ -22,27 +22,27 @@ module piso_msb_reg #(
     input  wire [N-1:0] d_in,
     output wire [N-1:0] q
 );
-  wire [N-1:0] d_next;  // next state of the register
+    wire [N-1:0] d_next;  // next state of the register
 
-  // d_next = load ? d_in : q shifted toward the MSB (sin enters at the LSB).
-  // Mux input packing: input 0 in the low N bits, input 1 above it.
-  mux #(
-      .N(N),
-      .S(1),
-      .D(D)
-  ) m (
-      .d  ({d_in, {q[N-2:0], sin}}),
-      .sel(load),
-      .y  (d_next)
-  );
+    // d_next = load ? d_in : q shifted toward the MSB (sin enters at the LSB).
+    // Mux input packing: input 0 in the low N bits, input 1 above it.
+    mux #(
+        .N(N),
+        .S(1),
+        .D(D)
+    ) m (
+        .d  ({d_in, {q[N-2:0], sin}}),
+        .sel(load),
+        .y  (d_next)
+    );
 
-  dff_sc #(
-      .N(N),
-      .D(DD)
-  ) ff (
-      .clk  (clk),
-      .clear(clear),
-      .d    (d_next),
-      .q    (q)
-  );
+    dff_sc #(
+        .N(N),
+        .D(DD)
+    ) ff (
+        .clk  (clk),
+        .clear(clear),
+        .d    (d_next),
+        .q    (q)
+    );
 endmodule

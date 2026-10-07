@@ -13,13 +13,13 @@ module full_adder #(
     output wire sum,
     output wire cout
 );
-  wire axb;  // a ^ b
-  wire c1;  // a & b
-  wire c2;  // cin & (a ^ b)
+    wire axb;  // a ^ b
+    wire c1;  // a & b
+    wire c2;  // cin & (a ^ b)
 
-  xor #(D) (axb, a, b);
-  xor #(D) (sum, axb, cin);
-  and #(D) (c1, a, b);
-  and #(D) (c2, axb, cin);
-  or #(D) (cout, c1, c2);
+    xor #(D) (axb, a, b);
+    xor #(D) (sum, axb, cin);
+    and #(D) (c1, a, b);
+    and #(D) (c2, axb, cin);
+    or #(D) (cout, c1, c2);
 endmodule

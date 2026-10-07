@@ -17,34 +17,34 @@ module multi_adder #(
     input  wire [N*M-1:0] in_vecs,
     output wire [  W-1:0] result
 );
-  wire [2*W-1:0] reduced;
-  wire [W-1:0] sum;
-  wire cout;  // always 0; dropped
+    wire [2*W-1:0] reduced;
+    wire [W-1:0] sum;
+    wire cout;  // always 0; dropped
 
-  csa_stack #(
-      .N(N),
-      .M(M),
-      .D(D)
-  ) stack (
-      .in_vecs (in_vecs),
-      .out_vecs(reduced)
-  );
+    csa_stack #(
+        .N(N),
+        .M(M),
+        .D(D)
+    ) stack (
+        .in_vecs (in_vecs),
+        .out_vecs(reduced)
+    );
 
-  lookahead_adder #(
-      .N(W),
-      .D(D)
-  ) final_adder (
-      .cin   (1'b0),
-      .addend(reduced[0+:W]),
-      .augend(reduced[W+:W]),
-      .result(sum),
-      .cout  (cout)
-  );
+    lookahead_adder #(
+        .N(W),
+        .D(D)
+    ) final_adder (
+        .cin   (1'b0),
+        .addend(reduced[0+:W]),
+        .augend(reduced[W+:W]),
+        .result(sum),
+        .cout  (cout)
+    );
 
-  buf1 #(
-      .N(W)
-  ) gen_result (
-      .a(sum),
-      .y(result)
-  );
+    buf1 #(
+        .N(W)
+    ) gen_result (
+        .a(sum),
+        .y(result)
+    );
 endmodule
