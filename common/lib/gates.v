@@ -223,7 +223,10 @@ module and_n #(
   genvar k;
   generate
     for (k = 0; k < I; k = k + 1) begin : g_and
-      and2 #(N, D) a (
+      and2 #(
+          .N(N),
+          .D(D)
+      ) a (
           .a(chain[k*N+:N]),
           .b(d[k*N+:N]),
           .y(chain[(k+1)*N+:N])
@@ -266,7 +269,10 @@ module or_n #(
   genvar k;
   generate
     for (k = 0; k < I; k = k + 1) begin : g_or
-      or2 #(N, D) o (
+      or2 #(
+          .N(N),
+          .D(D)
+      ) o (
           .a(chain[k*N+:N]),
           .b(d[k*N+:N]),
           .y(chain[(k+1)*N+:N])
@@ -309,7 +315,10 @@ module xor_n #(
   genvar k;
   generate
     for (k = 0; k < I; k = k + 1) begin : g_xor
-      xor2 #(N, D) o (
+      xor2 #(
+          .N(N),
+          .D(D)
+      ) o (
           .a(chain[k*N+:N]),
           .b(d[k*N+:N]),
           .y(chain[(k+1)*N+:N])
@@ -350,7 +359,10 @@ module and_2n #(
           .y(y)
       );
     end else if (I == 2) begin : g_base2
-      and2 #(N, D) g_and (
+      and2 #(
+          .N(N),
+          .D(D)
+      ) g_and (
           .a(d[N-1:0]),
           .b(d[2*N-1:N]),
           .y(y)
@@ -413,7 +425,10 @@ module or_2n #(
           .y(y)
       );
     end else if (I == 2) begin : g_base2
-      or2 #(N, D) g_or (
+      or2 #(
+          .N(N),
+          .D(D)
+      ) g_or (
           .a(d[N-1:0]),
           .b(d[2*N-1:N]),
           .y(y)
@@ -476,7 +491,10 @@ module xor_2n #(
           .y(y)
       );
     end else if (I == 2) begin : g_base2
-      xor2 #(N, D) g_xor (
+      xor2 #(
+          .N(N),
+          .D(D)
+      ) g_xor (
           .a(d[N-1:0]),
           .b(d[2*N-1:N]),
           .y(y)

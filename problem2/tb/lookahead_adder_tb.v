@@ -60,17 +60,12 @@ module lookahead_adder_tb;
 
       // sample
       tests = tests + 1;
-      ok  = ({cout, result} === expected);
+      ok = ({cout, result} === expected);
 
       if (ok) begin
         if (verbose)
           $display(
-              "PASS: %0d + %0d + %0d = %0d (cout = %b)",
-              a,
-              b,
-              c,
-              expected[N-1:0],
-              expected[N]
+              "PASS: %0d + %0d + %0d = %0d (cout = %b)", a, b, c, expected[N-1:0], expected[N]
           );
       end else begin
         errors = errors + 1;
@@ -84,12 +79,12 @@ module lookahead_adder_tb;
   // Stimulus
   integer i, j, k;
   initial begin
-    errors     = 0;
-    tests      = 0;
-    verbose    = 1'b1;  // print PASS reports
-    cin        = 1'b0;
-    addend     = {N{1'b0}};
-    augend     = {N{1'b0}};
+    errors  = 0;
+    tests   = 0;
+    verbose = 1'b1;  // print PASS reports
+    cin     = 1'b0;
+    addend  = {N{1'b0}};
+    augend  = {N{1'b0}};
 
     // explicit tests
     run_test(4'd5, 4'd1, 1'b0);

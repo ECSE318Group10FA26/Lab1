@@ -84,10 +84,10 @@ module multi_adder_check #(
     in_vecs = '1;
     check();
     if (N == 8 && M == 8) begin
-        in_vecs = 64'h0C0D05060708090F;
-        check();
-        in_vecs = 64'h030E05060708130A;
-        check();
+      in_vecs = 64'h0C0D05060708090F;
+      check();
+      in_vecs = 64'h030E05060708130A;
+      check();
     end
     // walking single full word
     for (int k = 0; k < M; k++) begin
@@ -106,9 +106,17 @@ module multi_adder_check #(
     // propagation-delay report, delays in ns (only meaningful with D > 0)
     if (D > 0) begin
       if (measured > 0)
-        $display("DELAY N=%0d M=%0d: min=%0d avg=%0d max=%0d spread=%0d (%0d changed, %0d no-change)",
-                 N, M, dly_min, dly_sum / time'(measured), dly_max, dly_max - dly_min,
-                 measured, no_change);
+        $display(
+            "DELAY N=%0d M=%0d: min=%0d avg=%0d max=%0d spread=%0d (%0d changed, %0d no-change)",
+            N,
+            M,
+            dly_min,
+            dly_sum / time'(measured),
+            dly_max,
+            dly_max - dly_min,
+            measured,
+            no_change
+        );
       else $display("DELAY N=%0d M=%0d: no output transitions measured", N, M);
     end
   end

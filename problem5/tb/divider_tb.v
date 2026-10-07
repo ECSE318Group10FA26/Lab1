@@ -33,13 +33,23 @@ module divider_check #(
 
   // per-cycle delay is measured from the clock edge
   // to the end of movement on output
-  time t_edge;
-  time last_change;
-  time dly;
+  time            t_edge;
+  time            last_change;
+  time            dly;
   time dly_min, dly_max, dly_sum;
   int unsigned measured;
 
-  always @(quotient or remainder or done or dut.R or dut.D or dut.hot or dut.R_next or dut.M_next or dut.D_in)
+  always @(
+      quotient or
+      remainder or
+      done or
+      dut.R or
+      dut.D or
+      dut.hot or
+      dut.R_next or
+      dut.M_next or
+      dut.D_in
+  )
     last_change = $time;
 
   always @(posedge clk) t_edge = $time;
@@ -49,7 +59,7 @@ module divider_check #(
       dly = last_change - t_edge;
       if (measured == 0 || dly < dly_min) dly_min = dly;
       if (measured == 0 || dly > dly_max) dly_max = dly;
-      dly_sum  += dly;
+      dly_sum += dly;
       measured++;
     end
   end
@@ -88,7 +98,7 @@ module divider_check #(
       divisor  = dvr;
       start    = 1'b1;
       @(negedge clk);
-      start    = 1'b0;
+      start   = 1'b0;
 
       // wait for done (with timeout so the sim never hangs)
       timeout = 0;
@@ -103,12 +113,18 @@ module divider_check #(
         errors = errors + 1;
       end else if (quotient === exp_q && remainder === exp_r) begin
         if (verbose)
-          $display("PASS N=%0d: %0d/%0d  quotient = %0d  remainder = %0d", N, dvd, dvr, quotient,
-                   remainder);
+          $display(
+              "PASS N=%0d: %0d/%0d  quotient = %0d  remainder = %0d",
+              N,
+              dvd,
+              dvr,
+              quotient,
+              remainder
+          );
       end else begin
         $display({"FAIL N=%0d: %0d/%0d  got quotient = %0d remainder = %0d, ",
                   "expected quotient = %0d remainder = %0d"}, N, dvd, dvr, quotient, remainder,
-                 exp_q, exp_r);
+                   exp_q, exp_r);
         errors = errors + 1;
       end
     end
@@ -127,9 +143,9 @@ module divider_check #(
     dly_sum     = 0;
     measured    = 0;
     rst         = 1'b1;
-    start    = 1'b0;
-    dividend = {N{1'b0}};
-    divisor  = {N{1'b0}};
+    start       = 1'b0;
+    dividend    = {N{1'b0}};
+    divisor     = {N{1'b0}};
 
     repeat (3) @(negedge clk);
     rst = 1'b0;
@@ -140,10 +156,10 @@ module divider_check #(
       run_test(4'd9, 4'd4);  // 9/4
     end
     // edge cases
-    run_test({N{1'b0}}, {{N-1{1'b0}}, 1'b1});  // 0/1
+    run_test({N{1'b0}}, {{N - 1{1'b0}}, 1'b1});  // 0/1
     run_test({N{1'b1}}, {N{1'b1}});  // max/max
     run_test({N{1'b1}}, {N{1'b1}} - 2);
-    run_test({N{1'b1}}, {{N-1{1'b0}}, 1'b1});  // max quotient
+    run_test({N{1'b1}}, {{N - 1{1'b0}}, 1'b1});  // max quotient
 
     verbose = 1'b0;  // quiet for the sweep / random vectors
 
@@ -172,8 +188,15 @@ module divider_check #(
     // max should match DG*depth+DD, depth from ./gates.sh
     if (DG > 0 || DD > 0) begin
       if (measured > 0)
-        $display("DELAY N=%0d: min=%0d avg=%0d max=%0d spread=%0d (%0d active cycles)", N, dly_min,
-                 dly_sum / time'(measured), dly_max, dly_max - dly_min, measured);
+        $display(
+            "DELAY N=%0d: min=%0d avg=%0d max=%0d spread=%0d (%0d active cycles)",
+            N,
+            dly_min,
+            dly_sum / time'(measured),
+            dly_max,
+            dly_max - dly_min,
+            measured
+        );
       else $display("DELAY N=%0d: no DUT activity measured", N);
     end
 
@@ -185,8 +208,8 @@ endmodule
 module divider_tb;
   localparam int CLK_HALF = 90;
 
-  reg         clk;
-  wire  [5:0] fin;
+  reg        clk;
+  wire [5:0] fin;
 
   // Maybe we should tune the clock so its not the same for each bench
   initial clk = 1'b0;
@@ -194,8 +217,18 @@ module divider_tb;
 
   // Test a bunch of N
   // TODO: update problem.env with new stuff
-  divider_check #(.N(2)) c_2 (.clk(clk), .fin(fin[0]));
-  divider_check #(.N(3)) c_3 (.clk(clk), .fin(fin[1]));
+  divider_check #(
+      .N(2)
+  ) c_2 (
+      .clk(clk),
+      .fin(fin[0])
+  );
+  divider_check #(
+      .N(3)
+  ) c_3 (
+      .clk(clk),
+      .fin(fin[1])
+  );
   divider_check #(
       .N(4),
       .VERBOSE(1)
@@ -203,9 +236,24 @@ module divider_tb;
       .clk(clk),
       .fin(fin[2])
   );
-  divider_check #(.N(5)) c_5 (.clk(clk), .fin(fin[3]));
-  divider_check #(.N(8)) c_8 (.clk(clk), .fin(fin[4]));
-  divider_check #(.N(16)) c_16 (.clk(clk), .fin(fin[5]));
+  divider_check #(
+      .N(5)
+  ) c_5 (
+      .clk(clk),
+      .fin(fin[3])
+  );
+  divider_check #(
+      .N(8)
+  ) c_8 (
+      .clk(clk),
+      .fin(fin[4])
+  );
+  divider_check #(
+      .N(16)
+  ) c_16 (
+      .clk(clk),
+      .fin(fin[5])
+  );
 
   // Waveform dump; finish once every instance has reported
   initial begin

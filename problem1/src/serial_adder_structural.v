@@ -10,9 +10,9 @@
 
 // Serial Adder - structural implementation
 module serial_adder_structural #(
-    parameter int N = 4,
+    parameter int N  = 4,
     // gate delay, in `timescale units
-    parameter int D = 0,
+    parameter int D  = 0,
     parameter int DD = 0
 ) (
     input  wire         clk,
@@ -83,7 +83,7 @@ module serial_adder_structural #(
 
   // result register (SUM bit enters at the MSB)
   sipo_reg #(
-      .N(N),
+      .N (N),
       .DD(DD)
   ) reg_result (
       .clk  (clk),

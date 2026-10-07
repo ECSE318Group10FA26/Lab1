@@ -7,7 +7,7 @@ module csa_layer #(
     parameter int D = 0
 ) (
     // packed inputs: input k = d[k*N +: N]
-    input  wire [N*M-1:0] in_vecs,
+    input wire [N*M-1:0] in_vecs,
     output wire [N*((M/3) + (M%3))-1:0] out_vecs,
     output wire [N*(M/3)-1:0] carry_outs  // Higher order number (N+1)
 );

@@ -14,7 +14,13 @@ module csa #(
   genvar i;
   generate
     for (i = 0; i < N; i = i + 1) begin : g_bit
-      full_adder #(D) fa (x[i], y[i], z[i], s[i], c[i]);
+      full_adder #(D) fa (
+          .a(x[i]),
+          .b(y[i]),
+          .cin(z[i]),
+          .sum(s[i]),
+          .cout(c[i])
+      );
     end
   endgenerate
 endmodule

@@ -17,20 +17,20 @@ module divider_array_tb;
   localparam int D = 1;
   localparam int SETTLE = 100;
 
-  reg  [N-1:0] dividend;
-  reg  [N-1:0] divisor;
-  wire [N-1:0] quotient;
-  wire [N-1:0] remainder;
+  reg          [N-1:0] dividend;
+  reg          [N-1:0] divisor;
+  wire         [N-1:0] quotient;
+  wire         [N-1:0] remainder;
 
-  integer        errors;
-  integer        tests;
-  reg            verbose;
+  integer              errors;
+  integer              tests;
+  reg                  verbose;
 
-  time t_drive;
+  time                 t_drive;
   // Check last time output vec has changed
-  time last_change = 0;
-  int unsigned measured = 0;  // vectors that produced output activity
-  int unsigned no_change = 0;  // vectors with no output transition
+  time                 last_change = 0;
+  int unsigned         measured = 0;  // vectors that produced output activity
+  int unsigned         no_change = 0;  // vectors with no output transition
   time dly_min, dly_max;  // ns (the `timescale unit)
   time dly_sum = 0;  // running total, for the average
 
@@ -61,7 +61,7 @@ module divider_array_tb;
 
       // Set all inputs to x before measuring propagation
       dividend = 'x;
-      divisor  = 'x;
+      divisor = 'x;
       #(SETTLE);
 
       dividend = dvd;
@@ -74,15 +74,14 @@ module divider_array_tb;
         dly = last_change - t_drive;
         if (measured == 0 || dly < dly_min) dly_min = dly;
         if (measured == 0 || dly > dly_max) dly_max = dly;
-        dly_sum  += dly;
+        dly_sum += dly;
         measured++;
       end else begin
         no_change++;
       end
 
       if (quotient === exp_q && remainder === exp_r) begin
-        if (verbose)
-          $display("PASS: %0d / %0d = %0d remainder %0d", dvd, dvr, quotient, remainder);
+        if (verbose) $display("PASS: %0d / %0d = %0d remainder %0d", dvd, dvr, quotient, remainder);
       end else begin
         errors = errors + 1;
         $display("FAIL: %0d / %0d  got q = %0d r = %0d, expected q = %0d r = %0d", dvd, dvr,
@@ -128,9 +127,16 @@ module divider_array_tb;
     // propagation-delay report, delays in ns
     if (D > 0) begin
       if (measured > 0)
-        $display("DELAY N=%0d: min=%0d avg=%0d max=%0d spread=%0d (%0d changed, %0d no-change)",
-                 N, dly_min, dly_sum / time'(measured), dly_max, dly_max - dly_min, measured,
-                 no_change);
+        $display(
+            "DELAY N=%0d: min=%0d avg=%0d max=%0d spread=%0d (%0d changed, %0d no-change)",
+            N,
+            dly_min,
+            dly_sum / time'(measured),
+            dly_max,
+            dly_max - dly_min,
+            measured,
+            no_change
+        );
       else $display("DELAY N=%0d: no output transitions measured", N);
     end
 

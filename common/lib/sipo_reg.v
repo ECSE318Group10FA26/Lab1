@@ -8,7 +8,7 @@
 
 module sipo_reg #(
     // data width of register, in bits
-    parameter int N = 2,
+    parameter int N  = 2,
     parameter int DD = 0
 ) (
     input  wire         clk,

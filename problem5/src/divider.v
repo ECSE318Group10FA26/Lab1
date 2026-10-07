@@ -12,13 +12,13 @@
 // piso_msb_reg, or_n, and2, buf1)
 
 module divider #(
-    parameter int N = 4,   // operand width (M and D)
+    parameter int N  = 4,  // operand width (M and D)
     parameter int DG = 2,  // gate delay, in `timescale units
     parameter int DD = 1   // register (clock-to-q) delay, in `timescale units
 ) (
     input  wire         clk,
-    input  wire         clear,  // synchronous reset
-    input  wire         start,  // pulse high to begin a division
+    input  wire         clear,      // synchronous reset
+    input  wire         start,      // pulse high to begin a division
     input  wire [N-1:0] dividend,
     input  wire [N-1:0] divisor,
     output wire [N-1:0] quotient,
@@ -129,7 +129,7 @@ module divider #(
       .S(2),
       .D(DG)
   ) mux_R (
-      .d  ({ {(N + 1) {1'b0}}, {(N + 1) {1'b0}}, {q_row_n, cas_sum}, R }),
+      .d  ({{(N + 1) {1'b0}}, {(N + 1) {1'b0}}, {q_row_n, cas_sum}, R}),
       .sel({load, busy}),
       .y  (R_next)
   );
@@ -200,10 +200,10 @@ module divider #(
   );
 
   buf1 #(
-	.N(N)
-   ) buf1 (
-	{D[N-2:0], q_bit},
-	quotient
+      .N(N)
+  ) buf1 (
+      .a({D[N-2:0], q_bit}),
+      .y(quotient)
   );
 
 endmodule

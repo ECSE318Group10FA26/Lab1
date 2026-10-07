@@ -23,7 +23,12 @@ module divider_array #(
   wire [N*N-1:0] rs;
 
   // first row: partial remainder = dividend's MSB
-  buf1 #(.N(N+1)) buf_init ({{N{1'b0}}, dividend[N-1]}, pr[(N-1)*(N+1)+:N+1]);
+  buf1 #(
+      .N(N + 1)
+  ) buf_init (
+      .a({{N{1'b0}}, dividend[N-1]}),
+      .y(pr[(N-1)*(N+1)+:N+1])
+  );
 
   genvar k;
   generate
@@ -50,7 +55,12 @@ module divider_array #(
 
       // shift the partial remainder left, bring down the next dividend bit
       if (k > 0) begin : g_shift
-        buf1 #(.N(N+1)) buf_next ({rs[k*N+:N], dividend[k-1]}, pr[(k-1)*(N+1)+:N+1]);
+        buf1 #(
+            .N(N + 1)
+        ) buf_next (
+            .a({rs[k*N+:N], dividend[k-1]}),
+            .y(pr[(k-1)*(N+1)+:N+1])
+        );
       end
     end
   endgenerate

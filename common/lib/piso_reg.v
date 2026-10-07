@@ -8,9 +8,9 @@
 
 module piso_reg #(
     // data width of register, in bits
-    parameter int N = 2,
+    parameter int N  = 2,
     // gate delay, in `timescale units
-    parameter int D = 0,
+    parameter int D  = 0,
     parameter int DD = 0
 ) (
     input  wire         clk,

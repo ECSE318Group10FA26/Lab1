@@ -28,17 +28,26 @@ module mux #(
       wire [N-1:0] lo, hi;
 
       not #(D) (sel_n, sel[0]);
-      and2 #(N, D) g_lo (
+      and2 #(
+          .N(N),
+          .D(D)
+      ) g_lo (
           .a(d[N-1:0]),
           .b({N{sel_n}}),
           .y(lo)
       );
-      and2 #(N, D) g_hi (
+      and2 #(
+          .N(N),
+          .D(D)
+      ) g_hi (
           .a(d[2*N-1:N]),
           .b({N{sel[0]}}),
           .y(hi)
       );
-      or2 #(N, D) g_or (
+      or2 #(
+          .N(N),
+          .D(D)
+      ) g_or (
           .a(lo),
           .b(hi),
           .y(y)

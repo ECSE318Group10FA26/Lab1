@@ -32,7 +32,7 @@ TMP="$(mktemp -d)"
 trap 'rm -rf "$TMP"' EXIT
 
 # yosys script
-cat > "$TMP/script.ys" <<EOF
+cat >"$TMP/script.ys" <<EOF
 read_verilog $TMP/converted.v
 chparam -set N $N -set M $M multi_adder
 hierarchy -top multi_adder
@@ -46,8 +46,8 @@ ltp
 EOF
 
 # convert SystemVerilog -> Verilog-2005, then elaborate and analyse
-sv2v "${SOURCES[@]}" > "$TMP/converted.v"
-yosys -s "$TMP/script.ys" > "$TMP/out.log" 2>&1
+sv2v "${SOURCES[@]}" >"$TMP/converted.v"
+yosys -s "$TMP/script.ys" >"$TMP/out.log" 2>&1
 
 # summarise
 awk '
