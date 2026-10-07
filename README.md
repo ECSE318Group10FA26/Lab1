@@ -48,3 +48,8 @@ Install the following programs for the rest of the development environment \[opt
   - This shows a gate total for the design produced for that project
   - Each `gates.sh` has its own arguments, see its comments to see how to run
   - All gates scripts require `sv2v` and `yosys` to run, the devshell provides these
+
+### Notes
+
+- For problem 2, modify the `problem.env` to run the separate testbenches
+  - One testbench is called `lookahead_adder_tb` and the other is called `lookahead_adder_cp_tb`

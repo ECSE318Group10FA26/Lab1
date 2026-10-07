@@ -90,6 +90,6 @@ module lookahead_adder_cp_tb;
     $display("Part 2: slowest C0 -> result[3] over all inputs = %0d", worst);
     $display("        first found at A=%b B=%b, cin %b -> %b", wa, wb, wc, ~wc);
     $finish;
-  
+
   end
 endmodule
