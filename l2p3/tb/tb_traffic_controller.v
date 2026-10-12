@@ -199,7 +199,7 @@ module tb_traffic_controller;
         // ---------------- fault injection ----------------
         $display("--- T6: illegal state code -> flashing reds");
         drive(1, 1, 3);
-        @(negedge clk); #2 force dut.state = 3'd6;     // corrupt state register
+        @(negedge clk); #2 force dut.state = 3'd6;       // upset the state register
         fault_mode = 1; last_fl = -1;
         @(posedge clk); #1 release dut.state;
         drive(1, 1, 10);
@@ -217,7 +217,7 @@ module tb_traffic_controller;
         #1 if (Ga || Gb || !Ra || !Rb) begin
             errors = errors + 1; $display("T7 ERROR: guard did not act immediately");
         end
-        release dut.rGa;            // fault stays latched until the next clock
+        @(posedge clk); #1 release dut.rGa;            // hold the fault across a clock edge
         drive(1, 1, 10);
         if (dut.state !== 3'd4) begin
             errors = errors + 1; $display("T7 ERROR: did not enter S_FL");

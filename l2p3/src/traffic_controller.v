@@ -52,6 +52,9 @@ module traffic_controller (
     // Ga & Gb case required by the problem, plus Ga&Yb, Ya&Gb, Ya&Yb.
     wire conflict = (rGa | rYa) & (rGb | rYb);
 
+    // Fault = in S_FL or an illegal code (any code above S_BY), or a conflict.
+    wire fault = (state > S_BY) | conflict;
+
     // ---------------- state register ----------------
     always @(posedge clk) begin
         if (rst) begin
@@ -147,10 +150,11 @@ module traffic_controller (
     end
 
     // ---------------- safety guard on the outputs ----------------
-    // If a conflict is ever present, every G/Y is forced off at once and the
-    // reds flash; the FSM is sent to S_FL on the next clock.
+    // In any fault (S_FL, an illegal code, or a conflict) every G/Y is forced
+    // off at once and the reds flash, even if the decode above is faulty;
+    // a conflict also sends the FSM to S_FL on the next clock.
     always @(*) begin
-        if (conflict)
+        if (fault)
             {Ga, Ya, Ra, Gb, Yb, Rb} = {1'b0, 1'b0, flash, 1'b0, 1'b0, flash};
         else
             {Ga, Ya, Ra, Gb, Yb, Rb} = {rGa, rYa, rRa, rGb, rYb, rRb};
