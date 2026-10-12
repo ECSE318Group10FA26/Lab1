@@ -9,6 +9,7 @@
 # LIB_DIRS is optional: each directory's *.v files are appended to SOURCES.
 # Output (work/, transcript.log, VCD) lands inside the problem directory.
 set -euo pipefail
+shopt -s globstar # let LIB_DIRS' **/*.v glob recurse into subdirectories
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
@@ -52,7 +53,7 @@ for d in ${LIB_DIRS:-}; do
     echo "error: library directory '$d' (from LIB_DIRS) not found in $PROBLEM_DIR" >&2
     exit 1
   fi
-  for g in "$PROBLEM_DIR/$d"/*.v; do
+  for g in "$PROBLEM_DIR/$d"/**/*.v; do
     [ -e "$g" ] || continue # directory has no .v files
     SOURCES="$SOURCES ${g#"$PROBLEM_DIR"/}"
   done

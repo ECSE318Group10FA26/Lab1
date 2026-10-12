@@ -8,3 +8,9 @@ sim/
 .direnv/
 result
 out
+
+# PDK fetched by ciel (sky130), used by librelane
+.ciel/
+
+# Python
+__pycache__

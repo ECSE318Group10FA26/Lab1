@@ -23,6 +23,21 @@ Install the following programs for the gate analysis pipeline \[optional\]:
 - `sv2v`
 - `yosys`
 
+Install the following programs for the layout pipeline \[optional\]:
+
+- `librelane`
+- `klayout` [viewing]
+- `magic-vlsi` [viewing]
+
+Install the following programs for gate-level graphs/schematics \[optional\]:
+
+- `graphviz` (`yosys show` renders through `dot`)
+- `netlistsvg` [prettier schematics]
+- `xdot` [interactive viewer]
+
+The PDK (sky130) is fetched by `ciel` into the repo-local, gitignored `.ciel/` directory
+(`PDK_ROOT` is set by the devshell).
+
 Install the following programs for the rest of the development environment \[optional\]:
 
 - `verible` (LSP, lint, format)

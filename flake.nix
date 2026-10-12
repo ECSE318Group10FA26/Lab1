@@ -37,7 +37,7 @@
               options = [
                 "--inplace"
                 "--indentation_spaces"
-                " 4"
+                "4"
               ];
               includes = [
                 "*.v"
@@ -59,7 +59,8 @@
             };
             slang-lint = {
               # slang lints whole designs, not single files: the lint unit is
-              # one problem (lib + sources + testbench) from its problem.env.
+              # one problem (lib + sources) plus EACH testbench in tb/ as its
+              # own top (top module name = file name, repo convention).
               # The changed-file list treefmt passes as arguments is ignored;
               # treefmt runs this from the project root.
               command = pkgs.writeShellScriptBin "slang-lint" ''
@@ -70,17 +71,19 @@
                     set -eu
                     cd "$dir"
                     source ./problem.env
-                    shopt -s nullglob
+                    shopt -s nullglob globstar
                     sources=()
                     for f in ''${SOURCES:-}; do sources+=("$f"); done
                     for d in ''${LIB_DIRS:-}; do
-                      for g in "$d"/*.v; do sources+=("$g"); done
+                      for g in "$d"/**/*.v; do sources+=("$g"); done
                     done
-                    echo "==> slang: $dir"
                     # --timescale mirrors the -timescale flag in common/run.do:
                     # default time base for library modules (tbs set their own)
-                    ${pkgs.sv-lang}/bin/slang --lint-only --timescale 1ns/1ps -Wunused \
-                      "''${sources[@]}" "$TB_SOURCE" --top "$TB_TOP"
+                    for tb in tb/*.v; do
+                      echo "==> slang: ''${dir}''${tb}"
+                      ${pkgs.sv-lang}/bin/slang --lint-only --timescale 1ns/1ps -Weverything -Werror \
+                        "''${sources[@]}" "$tb" --top "$(basename "$tb" .v)"
+                    done
                   ) || rc=1
                 done
                 exit "$rc"
@@ -109,12 +112,26 @@
               haskellPackages.sv2v
               yosys
               sv-lang
+              # physical layout: RTL -> GDSII flow and layout viewers
+              librelane
+              pdk-ciel
+              klayout
+              magic-vlsi
+              # gate-level graphs/schematics (yosys show renders via dot)
+              graphviz
+              netlistsvg
+              xdot
             ];
 
             shellHook = ''
+              # keep the sky130 PDK inside the repo (gitignored), not ~/.ciel;
+              # both librelane and ciel resolve their PDK home from PDK_ROOT
+              export PDK_ROOT="$(git rev-parse --show-toplevel)/.ciel"
+
               echo "Lab1 dev shell."
               echo "  ./sim.sh  problemN   - compile + simulate problem N in the ModelSim container"
               echo "  ./wave.sh problemN   - simulate problem N, then open waveforms in gtkwave"
+              echo "  librelane <cfg.yaml> - RTL -> GDSII layout (one-time PDK: ciel enable --pdk-family sky130)"
             '';
           };
         };

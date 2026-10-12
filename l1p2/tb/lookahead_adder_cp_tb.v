@@ -89,23 +89,25 @@ module lookahead_adder_cp_tb;
 
         // ---------------- Part 2 ----------------
         worst = 0;
-        for (a = 0; a < (1 << N); a = a + 1)
-        for (b = 0; b < (1 << N); b = b + 1)
-        for (c = 0; c < 2; c = c + 1) begin
-            addend = a[3:0];
-            augend = b[3:0];
-            cin = c[0];
-            #(SETTLE);
-            t0 = $time;
-            t_msb = 0;
-            cin = ~c[0];  // only C0 changes
-            #(SETTLE);
-            d = (t_msb > t0) ? t_msb - t0 : 0;
-            if (d > worst) begin
-                worst = d;
-                wa = a[3:0];
-                wb = b[3:0];
-                wc = c[0];
+        for (a = 0; a < (1 << N); a = a + 1) begin
+            for (b = 0; b < (1 << N); b = b + 1) begin
+                for (c = 0; c < 2; c = c + 1) begin
+                    addend = a[3:0];
+                    augend = b[3:0];
+                    cin = c[0];
+                    #(SETTLE);
+                    t0 = $time;
+                    t_msb = 0;
+                    cin = ~c[0];  // only C0 changes
+                    #(SETTLE);
+                    d = (t_msb > t0) ? t_msb - t0 : 0;
+                    if (d > worst) begin
+                        worst = d;
+                        wa = a[3:0];
+                        wb = b[3:0];
+                        wc = c[0];
+                    end
+                end
             end
         end
         $display("Part 2: slowest C0 -> result[3] over all inputs = %0d", worst);

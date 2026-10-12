@@ -188,6 +188,8 @@ module divider #(
 
     // the restored remainder is non-negative and fits in N+1 bits, so the
     // carry-out is unused
+    wire cor_cout;  // unused carry-out (result fits in N+1 bits)
+
     lookahead_adder #(
         .N(N + 1),
         .D(DG)
@@ -196,7 +198,7 @@ module divider #(
         .addend(R),
         .augend({1'b0, cor_m}),
         .result(remainder),
-        .cout  ()
+        .cout  (cor_cout)
     );
 
     buf1 #(
