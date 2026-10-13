@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-# gates.sh - static gate analysis of the divider (problem5) netlist
+# gates.sh - static gate analysis of the divider (l1p5) netlist
 #
-# Usage:  cd problem5 && ./gates.sh [N]     e.g.  ./gates.sh 8
-#         (or: problem5/gates.sh [N] from the repo root; default: 4)
+# Usage:  cd l1p5 && ./gates.sh [N]     e.g.  ./gates.sh 8
+#         (or: l1p5/gates.sh [N] from the repo root; default: 4)
 #
 # Notes:
 #   - delays (DG/DD) are irrelevant here: yosys drop them; depth x DG
@@ -15,17 +15,17 @@ REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
 # design sources, in dependency order (same set as problem.env)
 SOURCES=(
-  "$REPO_ROOT/problem5/src/divider.v"
-  "$REPO_ROOT/common/lib/gates.v"
-  "$REPO_ROOT/common/lib/full_adder.v"
-  "$REPO_ROOT/common/lib/cas.v"
-  "$REPO_ROOT/common/lib/cas_row.v"
-  "$REPO_ROOT/common/lib/carry_gen.v"
-  "$REPO_ROOT/common/lib/lookahead_adder.v"
-  "$REPO_ROOT/common/lib/mux.v"
-  "$REPO_ROOT/common/lib/dff_sc.v"
-  "$REPO_ROOT/common/lib/piso_reg.v"
-  "$REPO_ROOT/common/lib/piso_msb_reg.v"
+  "$REPO_ROOT/l1p5/src/divider.v"
+  "$REPO_ROOT/common/lib/structural/gates.v"
+  "$REPO_ROOT/common/lib/structural/full_adder.v"
+  "$REPO_ROOT/common/lib/structural/cas.v"
+  "$REPO_ROOT/common/lib/structural/cas_row.v"
+  "$REPO_ROOT/common/lib/structural/carry_gen.v"
+  "$REPO_ROOT/common/lib/structural/lookahead_adder.v"
+  "$REPO_ROOT/common/lib/structural/mux.v"
+  "$REPO_ROOT/common/lib/structural/dff_sc.v"
+  "$REPO_ROOT/common/lib/structural/piso_reg.v"
+  "$REPO_ROOT/common/lib/structural/piso_msb_reg.v"
 )
 
 TMP="$(mktemp -d)"

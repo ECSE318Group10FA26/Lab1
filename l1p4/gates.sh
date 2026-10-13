@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-# gates.sh - static gate analysis of the divider_array (problem4) netlist
+# gates.sh - static gate analysis of the divider_array (l1p4) netlist
 #
-# Usage:  cd problem4 && ./gates.sh [N]     e.g.  ./gates.sh 8
-#         (or: problem4/gates.sh [N] from the repo root; default: 4)
+# Usage:  cd l1p4 && ./gates.sh [N]     e.g.  ./gates.sh 8
+#         (or: l1p4/gates.sh [N] from the repo root; default: 4)
 #
 # Notes:
 #   - delays (D) are irrelevant here: sv2v/yosys drop them; depth x D is the
@@ -15,11 +15,11 @@ REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
 # design sources, in dependency order (same set as problem.env)
 SOURCES=(
-  "$REPO_ROOT/problem4/src/divider_array.v"
-  "$REPO_ROOT/common/lib/gates.v"
-  "$REPO_ROOT/common/lib/full_adder.v"
-  "$REPO_ROOT/common/lib/cas.v"
-  "$REPO_ROOT/common/lib/cas_row.v"
+  "$REPO_ROOT/l1p4/src/divider_array.v"
+  "$REPO_ROOT/common/lib/structural/gates.v"
+  "$REPO_ROOT/common/lib/structural/full_adder.v"
+  "$REPO_ROOT/common/lib/structural/cas.v"
+  "$REPO_ROOT/common/lib/structural/cas_row.v"
 )
 
 TMP="$(mktemp -d)"
