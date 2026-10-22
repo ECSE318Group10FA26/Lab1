@@ -1,8 +1,11 @@
 #!/usr/bin/env bash
 # sim.sh - compile and simulate a problem using the ModelSim docker image
 #
-# Usage:  ./sim.sh [problem-dir]        e.g.  ./sim.sh problem1
-#         cd problem1 && ../sim.sh      (defaults to the current directory)
+# Usage:  ./sim.sh [--local] [problem-dir]      e.g.  ./sim.sh problem1
+#         cd problem1 && ../sim.sh --local      (defaults to the current directory)
+#
+# --local uses a locally installed ModelSim (vsim on PATH) instead of
+# running the image through podman.
 #
 # The problem directory must contain a problem.env defining SOURCES,
 # TB_SOURCE and TB_TOP (see problem1/problem.env for a template).
@@ -13,13 +16,28 @@ shopt -s globstar # let LIB_DIRS' **/*.v glob recurse into subdirectories
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
+USE_LOCAL=0
+ARGS=()
+for a in "$@"; do
+  case "$a" in
+  --local) USE_LOCAL=1 ;;
+  *) ARGS+=("$a") ;;
+  esac
+done
+
+if [ "$USE_LOCAL" -eq 1 ] && ! command -v vsim >/dev/null 2>&1; then
+  echo "error: --local requires ModelSim (vsim) on PATH" >&2
+  exit 1
+fi
+
 # resolve the problem directory (argument or current directory)
-PROBLEM_DIR="$(cd "${1:-.}" 2>/dev/null && pwd)" || {
-  echo "error: problem directory '${1:-.}' does not exist" >&2
+PROBLEM_DIR="$(cd "${ARGS[0]:-.}" 2>/dev/null && pwd)" || {
+  echo "error: problem directory '${ARGS[0]:-.}' does not exist" >&2
   exit 1
 }
 
-# it must live inside the repo (the repo root is what gets mounted)
+# it must live inside the repo (the repo root is what gets mounted, and
+# common/run.do is located relative to it)
 case "$PROBLEM_DIR" in
 "$REPO_ROOT"/*) REL="${PROBLEM_DIR#"$REPO_ROOT"/}" ;;
 *)
@@ -69,13 +87,23 @@ done
 
 mkdir -p "$PROBLEM_DIR/sim" # the testbench dumps its VCD here
 
-echo "==> simulating ${PROBLEM_NAME:-$REL}"
-
-podman run --rm \
-  -v "$REPO_ROOT:/work:Z" \
-  -w "/work/$REL" \
-  -e SOURCES="$SOURCES" \
-  -e TB_SOURCE="$TB_SOURCE" \
-  -e TB_TOP="$TB_TOP" \
-  docker.io/goldensniper/modelsim-docker \
-  vsim -c -do /work/common/run.do
+if [ "$USE_LOCAL" -eq 1 ]; then
+  echo "==> simulating ${PROBLEM_NAME:-$REL} (local vsim)"
+  # run from the problem dir so the relative paths in problem.env resolve,
+  # mirroring the container's working directory
+  (
+    cd "$PROBLEM_DIR"
+    export SOURCES="${SOURCES:-}" TB_SOURCE TB_TOP
+    vsim -c -do "$REPO_ROOT/common/run.do"
+  )
+else
+  echo "==> simulating ${PROBLEM_NAME:-$REL}"
+  podman run --rm \
+    -v "$REPO_ROOT:/work:Z" \
+    -w "/work/$REL" \
+    -e SOURCES="$SOURCES" \
+    -e TB_SOURCE="$TB_SOURCE" \
+    -e TB_TOP="$TB_TOP" \
+    docker.io/goldensniper/modelsim-docker \
+    vsim -c -do /work/common/run.do
+fi

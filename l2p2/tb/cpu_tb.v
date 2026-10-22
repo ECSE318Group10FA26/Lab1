@@ -9,7 +9,12 @@
 
 module cpu_tb;
 
-    localparam int T = 10;  // clock period, in `timescale units
+    // clock period, in `timescale units; a parameter (not localparam) so
+    // vsim -gT=<t> can sweep it. With D=2/DF=1 the worst-case floor is
+    // DF + 78 x D = 157 (78-gate critical path), but this program runs
+    // clean down to T=100 (98 and below fail: marginal sampling and
+    // glitch aliasing; the band is non-monotonic -- 94/96 pass, 98 fails)
+    parameter int T = 100;
 
     integer       errors;
     integer       tests;
@@ -25,8 +30,8 @@ module cpu_tb;
         .A (8),
         .I (16),
         .L (2),
-        .D (0),
-        .DF(0)
+        .D (2),
+        .DF(1)
     ) dut (
         .clk      (clk),
         .clear    (clear),
@@ -73,8 +78,11 @@ module cpu_tb;
         #1 clear = 0;
 
         // 38 instructions x 2 cycles, then the halt loop
+        // (sample at #(DF+1): with DF=1 the flops update 1 unit after the
+        // edge, so #1 would read the previous cycle's values -- pc
+        // alternates 152/156 across the halt loop's fetch/exec phases)
         repeat (96) @(posedge clk);
-        #1;
+        #2;
 
         // ---------------- checks ----------------
         tests = tests + 1;

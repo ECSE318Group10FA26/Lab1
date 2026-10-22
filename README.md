@@ -14,8 +14,8 @@ This provides all necessary programs for this project to run
 
 Install the following programs for the simulation pipeline:
 
-- `podman`
-- `gtkwave`
+- `podman` [optional - if vsim is available on PATH]
+- `gtkwave` [optional - for wave.sh]
 - `vcd2fst` [optional]
 
 Install the following programs for the gate analysis pipeline \[optional\]:
@@ -54,6 +54,8 @@ Install the following programs for the rest of the development environment \[opt
   replaced with the name of the directory to simulate
   - This sets up the work environment and all necessary libs defined in each problem's
     `problem.env` config file
+  - Add `--local` (e.g. `./sim.sh --local problemN`) to use a locally installed
+    ModelSim (`vsim` on `PATH`) instead of the podman container
 - To view the waves, be in the provided devshell or ensure `gtkwave` and optionally
   `vcd2fst` is installed
   - Then run `./wave.sh problemN [--no-sim] [--no-gui]` like the sim script

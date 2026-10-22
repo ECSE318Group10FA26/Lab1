@@ -12,7 +12,11 @@
 
 module math_tb;
 
-    localparam int T = 10;  // clock period, in `timescale units
+    // clock period, in `timescale units; a parameter (not localparam) so
+    // vsim -gT=<t> can sweep it. With D=2/DF=1 the worst-case floor is
+    // DF + 78 x D = 157 (78-gate critical path); this program runs clean
+    // down to T=88 (86 and below fail on marginal sampling)
+    parameter int T = 88;
 
     integer       errors;
     integer       tests;
@@ -27,8 +31,8 @@ module math_tb;
         .N (64),
         .A (7),
         .I (8),
-        .D (0),
-        .DF(0)
+        .D (2),
+        .DF(1)
     ) dut (
         .clk      (clk),
         .clear    (clear),
@@ -74,8 +78,11 @@ module math_tb;
         #1 clear = 0;
 
         // ~240 instructions (the multiply loop runs 30 times) x 2 cycles
+        // (sample at #(DF+1): with DF=1 the flops update 1 unit after the
+        // edge, so #1 would read the previous cycle's values -- pc
+        // alternates between addresses across the halt loop's phases)
         repeat (600) @(posedge clk);
-        #1;
+        #2;
 
         // ---------------- checks ----------------
         // mem[101] = -N (two's complement of 0x123456789ABCDEF0)
