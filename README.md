@@ -40,7 +40,8 @@ The PDK (sky130) is fetched by `ciel` into the repo-local, gitignored `.ciel/` d
 
 Install the following programs for the rest of the development environment \[optional\]:
 
-- `verible` (LSP, lint, format)
+- `verible` (SystemVerilog LSP, lint, format)
+- `vhdl_ls` (VHDL LSP - see "VHDL libraries" below for library mapping)
 - `mdformat` (format)
 - `spellcheck` (lint, format)
 
@@ -54,8 +55,32 @@ Install the following programs for the rest of the development environment \[opt
   replaced with the name of the directory to simulate
   - This sets up the work environment and all necessary libs defined in each problem's
     `problem.env` config file
-  - Add `--local` (e.g. `./sim.sh --local problemN`) to use a locally installed
-    ModelSim (`vsim` on `PATH`) instead of the podman container
+  - Add `--local` (e.g. `./sim.sh --local problemN`) to use a locally installed ModelSim
+    (`vsim` on `PATH`) instead of the podman container
+  - VHDL problems (e.g. l3\*) set `HDL="vhdl"` in `problem.env`; sources are then
+    compiled with `vcom` and the VCD is dumped by `common/run.do` instead of the
+    testbench (see `problem_template.env`)
+
+### VHDL libraries
+
+Shared VHDL code lives in `common/lib/vhdl`. Every directory containing `*.vhd` files
+maps to a logical library named by its path relative to `common/lib/vhdl` with `/`
+joined as `_` — e.g. `common/lib/vhdl/util/tb/` is compiled into library `util_tb`.
+`sim.sh` compiles all of them before the problem sources (or the subset listed in
+`VHDL_LIBS`, in dependency order), so problem code can simply write:
+
+```vhdl
+library util;
+use util.util_pkg.all;
+```
+
+When adding a library directory, also add it to `vhdl_ls.toml` (repo root) so the
+`vhdl_ls` language server resolves it in your editor — the same naming rule applies
+there. `vhdl_ls` is provided by the dev shell; `std`/`ieee` are bundled with it, and
+problem `src/`/`tb/` files are mapped to `defaultlib` (VHDL `work.` references resolve
+within it). Keep the editor workspace rooted at the repo root so `vhdl_ls.toml` is
+found.
+
 - To view the waves, be in the provided devshell or ensure `gtkwave` and optionally
   `vcd2fst` is installed
   - Then run `./wave.sh problemN [--no-sim] [--no-gui]` like the sim script

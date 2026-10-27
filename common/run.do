@@ -5,13 +5,27 @@
 #
 #   SOURCES   : space-separated design source files, compiled in order
 #   TB_SOURCE : testbench source file
-#   TB_TOP    : testbench top-level module (passed to vsim)
+#   TB_TOP    : testbench top-level module/entity (passed to vsim)
+#   HDL       : "verilog" (default) compiles with vlog, "vhdl" with vcom
+#   VCD_FILE  : vhdl mode only - path the VCD is dumped to (VHDL
+#               testbenches have no $dumpfile, so it is dumped from here)
+#
+# vhdl mode only, set by sim.sh (parallel lists, in compile order):
+#   VHDL_LIB_ROOT  : common/lib/vhdl as seen by vsim
+#   VHDL_LIB_NAMES : logical library names (util, util_tb, ...)
+#   VHDL_LIB_RELS  : their directories relative to VHDL_LIB_ROOT
 #
 # All paths are relative to the problem directory, which is the working
 # directory when this script runs inside the container.
 
 if {![info exists env(SOURCES)] || ![info exists env(TB_SOURCE)] || ![info exists env(TB_TOP)]} {
     puts "error: SOURCES, TB_SOURCE and TB_TOP must be set - run via ./sim.sh, not directly"
+    quit -code 1
+}
+
+set hdl [expr {[info exists env(HDL)] ? $env(HDL) : "verilog"}]
+if {$hdl eq "vhdl" && ![info exists env(VCD_FILE)]} {
+    puts "error: VCD_FILE must be set in vhdl mode - run via ./sim.sh, not directly"
     quit -code 1
 }
 
@@ -24,16 +38,42 @@ if [file exists work] {
 vlib work
 vmap work work
 
-# compile design sources in order, then the testbench
-# (-timescale gives the library modules a timeunit now that they carry gate
-# delays; testbenches declare their own `timescale, which takes precedence)
-foreach f $env(SOURCES) {
-    vlog -sv -lint -warning error -timescale 1ns/1ps -work work $f
+# vhdl mode: compile the logical libraries (common/lib/vhdl) first so the
+# problem sources can use them; compiled units land in sim/vhdl_libs/
+if {$hdl eq "vhdl" && [info exists env(VHDL_LIB_NAMES)] && $env(VHDL_LIB_NAMES) ne ""} {
+    file mkdir sim/vhdl_libs
+    foreach name $env(VHDL_LIB_NAMES) rel $env(VHDL_LIB_RELS) {
+        set libpath "sim/vhdl_libs/$name"
+        if [file exists $libpath] {
+            file delete -force $libpath
+        }
+        vlib $libpath
+        vmap $name $libpath
+        foreach f [lsort [glob -nocomplain "$env(VHDL_LIB_ROOT)/$rel/*.vhd"]] {
+            vcom -2008 -lint -work $name $f
+        }
+    }
 }
-vlog -sv -lint -warning error -timescale 1ns/1ps -work work $env(TB_SOURCE)
+
+# compile design sources in order, then the testbench
+# (verilog: -timescale gives the library modules a timeunit now that they
+# carry gate delays; testbenches declare their own `timescale, which takes
+# precedence)
+foreach f [concat $env(SOURCES) $env(TB_SOURCE)] {
+    if {$hdl eq "vhdl"} {
+        vcom -2008 -lint -work work $f
+    } else {
+        vlog -sv -lint -warning error -timescale 1ns/1ps -work work $f
+    }
+}
 
 # simulate (no optimization, keep full visibility for waveforms)
 vsim -voptargs=+acc work.$env(TB_TOP)
+
+if {$hdl eq "vhdl"} {
+    vcd file $env(VCD_FILE)
+    vcd add -r /$env(TB_TOP)/*
+}
 
 run -all
 quit -f

@@ -1,0 +1,20 @@
+# vhdl_ls project configuration (https://github.com/VHDL-LS/rust_hdl)
+#
+# Logical library names mirror what sim.sh passes to vcom -work: each
+# directory under common/lib/vhdl containing *.vhd files maps to a library
+# named by its relative path with '/' joined as '_'
+# (e.g. common/lib/vhdl/util/tb -> util_tb). When adding a library
+# directory, add a matching entry under [libraries] below.
+#
+# std and ieee are bundled with vhdl_ls.
+
+[libraries]
+
+# problem sources and testbenches, in one shared library ("work" is a
+# reserved name in vhdl_ls.toml; VHDL `work.` references resolve to the
+# library a file belongs to, which is this one)
+defaultlib.files = ["l*/src/*.vhd", "l*/tb/*.vhd"]
+
+# common/lib/vhdl/<dir> -> library <dir with '/' as '_'>
+util.files = ["common/lib/vhdl/util/*.vhd"]
+util_tb.files = ["common/lib/vhdl/util/tb/*.vhd"]

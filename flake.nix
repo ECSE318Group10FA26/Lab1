@@ -109,6 +109,7 @@
               nil
               nixd
               verible
+              vhdl-ls # vhdl_ls language server (config: vhdl_ls.toml)
               haskellPackages.sv2v
               yosys
               sv-lang
