@@ -10,11 +10,15 @@
 
 [libraries]
 
-# problem sources and testbenches, in one shared library ("work" is a
-# reserved name in vhdl_ls.toml; VHDL `work.` references resolve to the
-# library a file belongs to, which is this one)
-defaultlib.files = ["l*/src/*.vhd", "l*/tb/*.vhd"]
+# one library per problem directory, mirroring ModelSim (each problem
+# simulates with its own work library); VHDL `work.` references resolve
+# within a file's own library. Add a line when creating a problem.
+# ("work" itself is a reserved name in vhdl_ls.toml - use the dir name.)
+l3p1.files = ["l3p1/src/*.vhd", "l3p1/tb/*.vhd"]
+l3p2.files = ["l3p2/src/*.vhd", "l3p2/tb/*.vhd"]
 
 # common/lib/vhdl/<dir> -> library <dir with '/' as '_'>
 util.files = ["common/lib/vhdl/util/*.vhd"]
 util_tb.files = ["common/lib/vhdl/util/tb/*.vhd"]
+cells.files = ["common/lib/vhdl/cells/*.vhd"]
+arith.files = ["common/lib/vhdl/arith/*.vhd"]

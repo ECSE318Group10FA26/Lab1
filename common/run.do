@@ -40,6 +40,11 @@ vmap work work
 
 # vhdl mode: compile the logical libraries (common/lib/vhdl) first so the
 # problem sources can use them; compiled units land in sim/vhdl_libs/
+#
+# A library directory may carry a files.order (one filename per line, '#'
+# comments allowed) pinning the compile order when alphabetical order
+# wouldn't respect dependencies; it must list every *.vhd in the
+# directory.
 if {$hdl eq "vhdl" && [info exists env(VHDL_LIB_NAMES)] && $env(VHDL_LIB_NAMES) ne ""} {
     file mkdir sim/vhdl_libs
     foreach name $env(VHDL_LIB_NAMES) rel $env(VHDL_LIB_RELS) {
@@ -49,7 +54,31 @@ if {$hdl eq "vhdl" && [info exists env(VHDL_LIB_NAMES)] && $env(VHDL_LIB_NAMES) 
         }
         vlib $libpath
         vmap $name $libpath
-        foreach f [lsort [glob -nocomplain "$env(VHDL_LIB_ROOT)/$rel/*.vhd"]] {
+
+        set libdir "$env(VHDL_LIB_ROOT)/$rel"
+        set srcs [lsort [glob -nocomplain "$libdir/*.vhd"]]
+        if [file exists "$libdir/files.order"] {
+            set ordered {}
+            set fh [open "$libdir/files.order" r]
+            while {[gets $fh line] >= 0} {
+                set line [string trim $line]
+                if {$line eq "" || [string index $line 0] eq "#"} continue
+                lappend ordered $line
+            }
+            close $fh
+            # guard against a stale/typo'd order file silently dropping a source
+            set ondisk {}
+            foreach p $srcs { lappend ondisk [file tail $p] }
+            if {[lsort $ordered] ne $ondisk} {
+                puts "error: $libdir/files.order does not match the .vhd files on disk"
+                puts "  listed:  [lsort $ordered]"
+                puts "  on disk: $ondisk"
+                quit -code 1
+            }
+            set srcs {}
+            foreach f $ordered { lappend srcs "$libdir/$f" }
+        }
+        foreach f $srcs {
             vcom -2008 -lint -work $name $f
         }
     }

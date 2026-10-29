@@ -56,8 +56,10 @@ fi
 # shellcheck disable=SC1090
 source "$ENV_FILE"
 
-# at least one of SOURCES / LIB_DIRS must provide design sources
-if [ -z "${SOURCES:-}" ] && [ -z "${LIB_DIRS:-}" ]; then
+# at least one of SOURCES / LIB_DIRS must provide design sources (verilog
+# problems only; a vhdl problem's design may live entirely in the
+# common/lib/vhdl libraries, with just the testbench compiled into work)
+if [ "${HDL:-verilog}" = "verilog" ] && [ -z "${SOURCES:-}" ] && [ -z "${LIB_DIRS:-}" ]; then
   echo "error: problem.env must define SOURCES or LIB_DIRS" >&2
   exit 1
 fi
@@ -100,18 +102,60 @@ if [ "$HDL" = "vhdl" ]; then
       VHDL_LIB_NAMES="$VHDL_LIB_NAMES ${rel//\//_}"
     done
   elif [ -d "$VHDL_LIB_ROOT" ]; then
-    # lexical sort puts parents before their children ("util" < "util/tb")
-    while IFS= read -r rel; do
-      VHDL_LIB_RELS="$VHDL_LIB_RELS $rel"
-      VHDL_LIB_NAMES="$VHDL_LIB_NAMES ${rel//\//_}"
-    done < <(
+    # collect every directory containing *.vhd files (skipping files
+    # directly in common/lib/vhdl, which belong to no library)
+    mapfile -t lib_rels < <(
       for g in "$VHDL_LIB_ROOT"/**/*.vhd; do
         [ -e "$g" ] || continue
         rel="$(dirname "${g#"$VHDL_LIB_ROOT"/}")"
-        # files directly in common/lib/vhdl belong to no library - skip
         [ "$rel" != "." ] && printf '%s\n' "$rel"
       done | sort -u
     )
+    if [ "${#lib_rels[@]}" -gt 0 ]; then
+      # dependency-order the libraries by their 'library <name>;'
+      # cross-references (Kahn's algorithm, alphabetical tie-break)
+      declare -A rel_of=() deps=() done_lib=()
+      for rel in "${lib_rels[@]}"; do
+        rel_of["${rel//\//_}"]="$rel"
+      done
+      for rel in "${lib_rels[@]}"; do
+        name="${rel//\//_}"
+        d=""
+        while IFS= read -r ref; do
+          if [ -n "${rel_of[$ref]:-}" ] && [ "$ref" != "$name" ]; then
+            d="$d $ref"
+          fi
+        done < <(grep -hoiE '^[[:space:]]*library[[:space:]]+[a-z0-9_]+' "$VHDL_LIB_ROOT/$rel"/*.vhd | awk '{print tolower($2)}' | sort -u)
+        deps[$name]="${d# }"
+      done
+      ordered_names=()
+      while [ "${#ordered_names[@]}" -lt "${#lib_rels[@]}" ]; do
+        progress=0
+        while IFS= read -r name; do
+          [ -n "${done_lib[$name]:-}" ] && continue
+          ready=1
+          for d in ${deps[$name]}; do
+            [ -z "${done_lib[$d]:-}" ] && {
+              ready=0
+              break
+            }
+          done
+          if [ "$ready" -eq 1 ]; then
+            done_lib[$name]=1
+            ordered_names+=("$name")
+            progress=1
+          fi
+        done < <(printf '%s\n' "${!deps[@]}" | sort)
+        if [ "$progress" -eq 0 ]; then
+          echo "error: circular dependencies among VHDL libraries in common/lib/vhdl" >&2
+          exit 1
+        fi
+      done
+      for name in "${ordered_names[@]}"; do
+        VHDL_LIB_NAMES="$VHDL_LIB_NAMES $name"
+        VHDL_LIB_RELS="$VHDL_LIB_RELS ${rel_of[$name]}"
+      done
+    fi
   fi
   VHDL_LIB_RELS="${VHDL_LIB_RELS# }"
   VHDL_LIB_NAMES="${VHDL_LIB_NAMES# }"

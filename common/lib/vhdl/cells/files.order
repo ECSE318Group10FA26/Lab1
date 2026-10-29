@@ -1,0 +1,6 @@
+# compile order for library "cells" (dependency order - full_adder is used
+# by cas, cas by cas_row); see common/run.do
+full_adder.vhd
+cas.vhd
+cas_row.vhd
+dff_sc.vhd

@@ -66,20 +66,36 @@ Install the following programs for the rest of the development environment \[opt
 Shared VHDL code lives in `common/lib/vhdl`. Every directory containing `*.vhd` files
 maps to a logical library named by its path relative to `common/lib/vhdl` with `/`
 joined as `_` — e.g. `common/lib/vhdl/util/tb/` is compiled into library `util_tb`.
-`sim.sh` compiles all of them before the problem sources (or the subset listed in
-`VHDL_LIBS`, in dependency order), so problem code can simply write:
+Current libraries:
+
+| Library  | Directory                   | Contents                                                    |
+| -------- | --------------------------- | ----------------------------------------------------------- |
+| `util`   | `common/lib/vhdl/util/`     | general helpers (`util_pkg`: `clog2`, `is_pow2`, `to_sl`, ...) |
+| `util_tb`| `common/lib/vhdl/util/tb/`  | testbench helpers (`tb_pkg`: `check`, `check_eq`)           |
+| `cells`  | `common/lib/vhdl/cells/`    | structural cells (`full_adder`, `cas`, `cas_row`, `dff_sc`) |
+| `arith`  | `common/lib/vhdl/arith/`    | arithmetic units (`conditional_sum_adder`)                  |
+
+`sim.sh` compiles all of them before the problem sources, ordered by the
+`library X;` cross-references between them (or the subset/order listed in a
+problem's `VHDL_LIBS`), so problem code can simply write:
 
 ```vhdl
 library util;
 use util.util_pkg.all;
+...
+u0 : entity cells.full_adder port map (...);
 ```
 
-When adding a library directory, also add it to `vhdl_ls.toml` (repo root) so the
-`vhdl_ls` language server resolves it in your editor — the same naming rule applies
-there. `vhdl_ls` is provided by the dev shell; `std`/`ieee` are bundled with it, and
-problem `src/`/`tb/` files are mapped to `defaultlib` (VHDL `work.` references resolve
-within it). Keep the editor workspace rooted at the repo root so `vhdl_ls.toml` is
-found.
+Within a library, files compile alphabetically; when that order would violate
+dependencies, a `files.order` (one filename per line, `#` comments) pins the
+compile order.
+
+Editor support: `vhdl_ls` (provided by the dev shell; `std`/`ieee` are bundled)
+reads `vhdl_ls.toml` at the repo root, which maps each library directory and each
+problem directory to a logical library with the same naming rule — one entry per
+problem (`work.` resolves within a problem's own library, mirroring ModelSim).
+When adding a library or problem directory, add its line to `vhdl_ls.toml`. Keep
+the editor workspace rooted at the repo root so the file is found.
 
 - To view the waves, be in the provided devshell or ensure `gtkwave` and optionally
   `vcd2fst` is installed

@@ -7,6 +7,7 @@ library util;
 use util.util_pkg.all;
 library util_tb;
 use util_tb.tb_pkg.all;
+library arith;
 
 -- Self-checking testbench: exhaustively adds every (a, b, cin) combination
 -- and compares {cout, sum} against numeric_std.
@@ -22,7 +23,7 @@ architecture tb of conditional_sum_adder_tb is
     signal cout : std_logic;
 begin
 
-    dut : entity work.conditional_sum_adder
+    dut : entity arith.conditional_sum_adder
         generic map (N => N)
         port map (
             a    => a,

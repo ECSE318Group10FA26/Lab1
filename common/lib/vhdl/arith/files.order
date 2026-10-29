@@ -1,0 +1,4 @@
+# compile order for library "arith" (dependency order - the adder
+# instantiates the block); see common/run.do
+conditional_sum_block.vhd
+conditional_sum_adder.vhd
