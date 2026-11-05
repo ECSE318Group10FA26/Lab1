@@ -70,7 +70,7 @@ module cpu_tb;
         dut.status_reg.q = 5'b00000;
 
         // program image -> img -> RAM
-        $readmemh("sim/program.hex", img);
+        $readmemh("asm/program.hex", img);
 
         // ---------------- run ----------------
         clear = 1;

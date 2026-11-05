@@ -70,7 +70,7 @@ module math_tb;
         dut.status_reg.q = 5'b00000;
 
         // program image -> img -> RAM
-        $readmemh("sim/math.hex", img);
+        $readmemh("asm/math.hex", img);
 
         // ---------------- run ----------------
         clear = 1;

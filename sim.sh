@@ -66,6 +66,19 @@ fi
 : "${TB_SOURCE:?problem.env must define TB_SOURCE}"
 : "${TB_TOP:?problem.env must define TB_TOP}"
 
+# optional build hook: a script (relative to the problem directory) run
+# before compiling
+# It runs from the problem directory, mirroring
+# the container's working directory.
+if [ -n "${BUILD_SCRIPT:-}" ]; then
+  if [ ! -x "$PROBLEM_DIR/$BUILD_SCRIPT" ]; then
+    echo "error: BUILD_SCRIPT '$BUILD_SCRIPT' not found or not executable in $PROBLEM_DIR" >&2
+    exit 1
+  fi
+  echo "==> building ${PROBLEM_NAME:-$REL} ($BUILD_SCRIPT)"
+  (cd "$PROBLEM_DIR" && "./$BUILD_SCRIPT")
+fi
+
 # HDL mode selects the compiler used by run.do (vlog vs vcom) and the
 # LIB_DIRS glob extension
 HDL="${HDL:-verilog}"
