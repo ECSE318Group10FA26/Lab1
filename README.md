@@ -1,6 +1,6 @@
 # ECSE 318 Labs
 
-This repo contains group 6's problem solutions for the ECSE 318 Labs.
+This repo contains group 10's problem solutions for the ECSE 318 Labs.
 
 ## Entering the dev environment
 
