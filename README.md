@@ -44,6 +44,7 @@ Install the following programs for the rest of the development environment \[opt
 - `vhdl_ls` (VHDL LSP - see "VHDL libraries" below for library mapping)
 - `mdformat` (format)
 - `spellcheck` (lint, format)
+- `python3` (compiling assembly for l2p2)
 
 ## To run
 
