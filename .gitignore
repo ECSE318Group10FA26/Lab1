@@ -3,6 +3,7 @@ work/
 transcript*
 *.wlf
 sim/
+modelsim.ini
 
 # nix
 .direnv/

@@ -74,7 +74,7 @@ Current libraries:
 | `util`   | `common/lib/vhdl/util/`     | general helpers (`util_pkg`: `clog2`, `is_pow2`, `to_sl`, ...) |
 | `util_tb`| `common/lib/vhdl/util/tb/`  | testbench helpers (`tb_pkg`: `check`, `check_eq`)           |
 | `cells`  | `common/lib/vhdl/cells/`    | structural cells (`full_adder`, `cas`, `cas_row`, `dff_sc`) |
-| `arith`  | `common/lib/vhdl/arith/`    | arithmetic units (`conditional_sum_adder`)                  |
+| `arith`  | `common/lib/vhdl/arith/`    | arithmetic units (`conditional_sum_adder`, `add_sub`)       |
 
 `sim.sh` compiles all of them before the problem sources, ordered by the
 `library X;` cross-references between them (or the subset/order listed in a
