@@ -38,7 +38,7 @@ begin
             c1 => c1
         );
 
-    -- select the hypothesis matching the actual carry-in
+    -- pick the sum for the real carry-in
     sum  <= s1 when cin = '1' else s0;
     cout <= c1 when cin = '1' else c0;
 

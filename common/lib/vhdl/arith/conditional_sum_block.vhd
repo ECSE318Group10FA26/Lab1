@@ -1,10 +1,7 @@
 library ieee;
 use ieee.std_logic_1164.all;
 
--- N-bit conditional-sum block: computes a + b twice, once assuming a
--- block carry-in of 0 and once assuming 1.
---
--- N must be a power of two.
+-- N-bit conditional sum block, gives a + b for carry-in 0 and 1. N must be a power of two.
 entity conditional_sum_block is
     generic (N : positive);
     port (
@@ -28,8 +25,7 @@ begin
         c1    <= a(0) or b(0);
     end generate gen_bit;
 
-    -- recursive case: two half-width blocks; the lower block's
-    -- hypothetical carry-outs select between the upper block's hypotheses
+    -- split in half, low half's carries pick the high half's sum
     gen_split : if N > 1 generate
         signal lo_s0, lo_s1 : std_logic_vector(N / 2 - 1 downto 0);
         signal hi_s0, hi_s1 : std_logic_vector(N / 2 - 1 downto 0);

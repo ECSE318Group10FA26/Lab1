@@ -9,8 +9,7 @@ library util_tb;
 use util_tb.tb_pkg.all;
 library arith;
 
--- Self-checking testbench: exhaustively adds every (a, b, cin) combination
--- and compares {cout, sum} against numeric_std.
+-- Tries every a, b and cin and compares against numeric_std
 entity conditional_sum_adder_tb is
 end entity conditional_sum_adder_tb;
 
@@ -37,14 +36,13 @@ begin
         variable expected : unsigned(N downto 0);
         variable n_errors : natural := 0;
     begin
-        -- directed smoke checks via util_tb helpers
+        -- quick check of the wrap-around case
         a   <= x"ff";
         b   <= x"01";
         cin <= '1';
         wait for 1 ns;
         check_eq(cout & sum, std_logic_vector(to_unsigned(2**N + 1, N + 1)), "255 + 1 + 1 wraps");
 
-        -- exhaustive check of every (a, b, cin) combination
         for ci in 0 to 1 loop
             cin <= to_sl(ci = 1);
 
