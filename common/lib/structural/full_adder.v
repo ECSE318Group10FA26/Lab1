@@ -1,3 +1,6 @@
+`ifndef LAB1_COMMON_LIB_STRUCTURAL_FULL_ADDER_V
+`define LAB1_COMMON_LIB_STRUCTURAL_FULL_ADDER_V
+
 // one-bit full adder
 //
 //   sum  = a ^ b ^ cin
@@ -23,3 +26,5 @@ module full_adder #(
     and #(D) (c2, axb, cin);
     or #(D) (cout, c1, c2);
 endmodule
+
+`endif // LAB1_COMMON_LIB_STRUCTURAL_FULL_ADDER_V

@@ -1,3 +1,14 @@
+`ifndef LAB1_L2P2_SRC_CPU_V
+`define LAB1_L2P2_SRC_CPU_V
+
+`include "../common/lib/structural/alu/alu_core.v"
+`include "../common/lib/structural/demux.v"
+`include "../common/lib/structural/dff_sc.v"
+`include "../common/lib/structural/gates.v"
+`include "../common/lib/structural/mux.v"
+`include "../common/lib/structural/ram/ram.v"
+`include "../common/lib/structural/regfile.v"
+
 // structural CPU: 2**R registers, one RAM, PC, status register
 //
 //   The ALU is ALWAYS FW bits wide: the flags describe the full-width
@@ -700,3 +711,5 @@ module cpu #(
 
     assign zf = status[2];  // Z flag
 endmodule
+
+`endif // LAB1_L2P2_SRC_CPU_V

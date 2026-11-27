@@ -1,3 +1,6 @@
+`ifndef LAB1_COMMON_LIB_STRUCTURAL_DFF_SC_V
+`define LAB1_COMMON_LIB_STRUCTURAL_DFF_SC_V
+
 // N-bit D flip-flop / register with synchronous clear
 //
 // N = 1 (the default) is a single flip-flop, N > 1 a parallel register.
@@ -23,3 +26,5 @@ module dff_sc #(
         else q <= #(D) d;
     end
 endmodule
+
+`endif // LAB1_COMMON_LIB_STRUCTURAL_DFF_SC_V

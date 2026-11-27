@@ -1,6 +1,10 @@
 # compile order for library "cells" (dependency order - full_adder is used
-# by cas, cas by cas_row); see common/run.do
+# by cas, cas by cas_row and csa, csa_wide by csa_layer); see common/run.do
 full_adder.vhd
 cas.vhd
 cas_row.vhd
+csa.vhd
 dff_sc.vhd
+shift_ext.vhd
+csa_wide.vhd
+csa_layer.vhd

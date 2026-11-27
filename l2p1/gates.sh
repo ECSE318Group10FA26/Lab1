@@ -14,7 +14,7 @@ N="${1:-16}"
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
-# design sources, in dependency order (same set as problem.env's LIB_DIRS,
+# design sources, in dependency order for gate analysis (the common library,
 # minus what the ALU tree never instantiates: regfile, ram, dff_sc, ...)
 SOURCES=(
   "$REPO_ROOT/common/lib/structural/alu/alu_core.v"
@@ -46,7 +46,7 @@ ltp
 EOF
 
 # convert SystemVerilog -> Verilog-2005, then elaborate and analyse
-sv2v "${SOURCES[@]}" >"$TMP/converted.v"
+sv2v -I "$REPO_ROOT/l2p1" "${SOURCES[@]}" >"$TMP/converted.v"
 yosys -s "$TMP/script.ys" >"$TMP/out.log" 2>&1
 
 # summarise

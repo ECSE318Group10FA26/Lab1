@@ -1,3 +1,6 @@
+`ifndef LAB1_COMMON_LIB_STRUCTURAL_GATES_V
+`define LAB1_COMMON_LIB_STRUCTURAL_GATES_V
+
 // wide (N-bit) gate library cells
 //
 //   buf1 #(N)    : y = a
@@ -532,3 +535,5 @@ endmodule
 
 module gates;
 endmodule
+
+`endif // LAB1_COMMON_LIB_STRUCTURAL_GATES_V

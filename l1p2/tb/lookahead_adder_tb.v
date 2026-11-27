@@ -1,4 +1,9 @@
+`ifndef LAB1_L1P2_TB_LOOKAHEAD_ADDER_TB_V
+`define LAB1_L1P2_TB_LOOKAHEAD_ADDER_TB_V
+
 `timescale 1ns / 1ps
+
+`include "../common/lib/structural/lookahead_adder.v"
 
 module lookahead_adder_tb;
 
@@ -132,3 +137,5 @@ module lookahead_adder_tb;
     end
 
 endmodule
+
+`endif // LAB1_L1P2_TB_LOOKAHEAD_ADDER_TB_V

@@ -1,3 +1,9 @@
+`ifndef LAB1_COMMON_LIB_STRUCTURAL_CSA_STACK_V
+`define LAB1_COMMON_LIB_STRUCTURAL_CSA_STACK_V
+
+`include "../common/lib/structural/csa_layer.v"
+`include "../common/lib/structural/gates.v"
+
 // csa_stack - staged carry-save reduction tree
 //
 // Reduces M words of N bits (all weight 1) down to exactly 2 absolute-value
@@ -341,3 +347,5 @@ module csa_stack #(
         .out(out_vecs)
     );
 endmodule
+
+`endif // LAB1_COMMON_LIB_STRUCTURAL_CSA_STACK_V

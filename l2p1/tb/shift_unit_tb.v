@@ -1,3 +1,6 @@
+`ifndef LAB1_L2P1_TB_SHIFT_UNIT_TB_V
+`define LAB1_L2P1_TB_SHIFT_UNIT_TB_V
+
 // Testbench for the structural barrel shifter (shift_unit)
 //
 // Checks all 8 op encodings against an independent reference computed with
@@ -7,6 +10,8 @@
 // odd stage sizes and shamt >= N), and N=1 (the zero-stage generate path).
 
 `timescale 1ns / 1ps
+
+`include "../common/lib/structural/alu/shift_unit.v"
 
 module shift_unit_tb;
 
@@ -177,3 +182,5 @@ module shift_unit_tb;
     end
 
 endmodule
+
+`endif // LAB1_L2P1_TB_SHIFT_UNIT_TB_V

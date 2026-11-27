@@ -1,3 +1,6 @@
+`ifndef LAB1_L3P3_SRC_SSP_RX_V
+`define LAB1_L3P3_SRC_SSP_RX_V
+
 // SSP receive logic, sampled on the falling edge of SSPCLKIN
 
 module ssp_rx (
@@ -45,3 +48,5 @@ module ssp_rx (
     assign rx_valid = tgl_sync[2] ^ tgl_sync[1];
 
 endmodule
+
+`endif // LAB1_L3P3_SRC_SSP_RX_V

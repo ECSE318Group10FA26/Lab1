@@ -1,3 +1,6 @@
+`ifndef LAB1_L2P1_TB_ALU_CORE_TB_V
+`define LAB1_L2P1_TB_ALU_CORE_TB_V
+
 // Testbench for the structural ALU (alu_core)
 //
 // Checks all 64 op encodings against an independent integer-math
@@ -7,6 +10,8 @@
 // N=1 (minimal), N=16 (corner-case operand set; exhaustive is infeasible).
 
 `timescale 1ns / 1ps
+
+`include "../common/lib/structural/alu/alu_core.v"
 
 module alu_core_tb;
 
@@ -336,3 +341,5 @@ module alu_core_tb;
     end
 
 endmodule
+
+`endif // LAB1_L2P1_TB_ALU_CORE_TB_V

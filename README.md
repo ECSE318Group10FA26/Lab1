@@ -54,8 +54,11 @@ Install the following programs for the rest of the development environment \[opt
   - Alternatively, without a devshell, ensure `podman` is installed
 - To compile and simulate a problem, run `./sim.sh problemN` where `problemN` is
   replaced with the name of the directory to simulate
-  - This sets up the work environment and all necessary libs defined in each problem's
-    `problem.env` config file
+  - This sets up the work environment defined in each problem's `problem.env` config file
+  - Verilog testbenches include their design dependencies, so only the testbench is passed
+    to `vlog`; each source owns its direct includes and has an include guard
+  - To compile a Verilog testbench without the script, run `vlog` from its problem directory,
+    e.g. `cd l1p1 && vlog -sv -timescale 1ns/1ps tb/adder_tb.v`
   - Add `--local` (e.g. `./sim.sh --local problemN`) to use a locally installed ModelSim
     (`vsim` on `PATH`) instead of the podman container
   - VHDL problems (e.g. l3\*) set `HDL="vhdl"` in `problem.env`; sources are then
@@ -73,8 +76,8 @@ Current libraries:
 | -------- | --------------------------- | ----------------------------------------------------------- |
 | `util`   | `common/lib/vhdl/util/`     | general helpers (`util_pkg`: `clog2`, `is_pow2`, `to_sl`, ...) |
 | `util_tb`| `common/lib/vhdl/util/tb/`  | testbench helpers (`tb_pkg`: `check`, `check_eq`)           |
-| `cells`  | `common/lib/vhdl/cells/`    | structural cells (`full_adder`, `cas`, `cas_row`, `dff_sc`) |
-| `arith`  | `common/lib/vhdl/arith/`    | arithmetic units (`conditional_sum_adder`, `add_sub`)       |
+| `cells`  | `common/lib/vhdl/cells/`    | structural cells (`full_adder`, `cas`, `cas_row`, `csa`, `dff_sc`, `shift_ext`, `csa_wide`, `csa_layer`) |
+| `arith`  | `common/lib/vhdl/arith/`    | arithmetic units (`conditional_sum_adder`, `add_sub`, `parallel_multiplier`, `shift_add_multiplier`, `csa_stack`) |
 
 `sim.sh` compiles all of them before the problem sources, ordered by the
 `library X;` cross-references between them (or the subset/order listed in a

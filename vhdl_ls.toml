@@ -16,6 +16,8 @@
 # ("work" itself is a reserved name in vhdl_ls.toml - use the dir name.)
 l3p1.files = ["l3p1/src/*.vhd", "l3p1/tb/*.vhd"]
 l3p2.files = ["l3p2/src/*.vhd", "l3p2/tb/*.vhd"]
+l4p1.files = ["l4p1/src/*.vhd", "l4p1/tb/*.vhd"]
+l4p2.files = ["l4p2/src/*.vhd", "l4p2/tb/*.vhd"]
 
 # common/lib/vhdl/<dir> -> library <dir with '/' as '_'>
 util.files = ["common/lib/vhdl/util/*.vhd"]

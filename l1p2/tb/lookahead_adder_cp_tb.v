@@ -1,3 +1,6 @@
+`ifndef LAB1_L1P2_TB_LOOKAHEAD_ADDER_CP_TB_V
+`define LAB1_L1P2_TB_LOOKAHEAD_ADDER_CP_TB_V
+
 // Critical-path testbench for the 4-bit CLA (Problem 2b/2c)
 //
 // Gate delay D = 10
@@ -9,6 +12,8 @@
 //         slowest one - proves part 1 is worst case
 
 `timescale 1ns / 1ps
+
+`include "../common/lib/structural/lookahead_adder.v"
 
 module lookahead_adder_cp_tb;
 
@@ -116,3 +121,5 @@ module lookahead_adder_cp_tb;
 
     end
 endmodule
+
+`endif // LAB1_L1P2_TB_LOOKAHEAD_ADDER_CP_TB_V

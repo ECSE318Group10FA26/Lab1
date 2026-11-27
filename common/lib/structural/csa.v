@@ -1,3 +1,8 @@
+`ifndef LAB1_COMMON_LIB_STRUCTURAL_CSA_V
+`define LAB1_COMMON_LIB_STRUCTURAL_CSA_V
+
+`include "../common/lib/structural/full_adder.v"
+
 // Wide N-sized Carry Save Adder
 module csa #(
     // data width of input, in bits
@@ -24,3 +29,5 @@ module csa #(
         end
     endgenerate
 endmodule
+
+`endif // LAB1_COMMON_LIB_STRUCTURAL_CSA_V

@@ -1,3 +1,9 @@
+`ifndef LAB1_COMMON_LIB_STRUCTURAL_LOOKAHEAD_ADDER_V
+`define LAB1_COMMON_LIB_STRUCTURAL_LOOKAHEAD_ADDER_V
+
+`include "../common/lib/structural/carry_gen.v"
+`include "../common/lib/structural/gates.v"
+
 // Lookahead Adder
 //
 // g = a & b
@@ -72,3 +78,5 @@ module lookahead_adder #(
     end
 
 endmodule
+
+`endif // LAB1_COMMON_LIB_STRUCTURAL_LOOKAHEAD_ADDER_V

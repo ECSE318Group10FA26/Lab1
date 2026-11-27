@@ -1,6 +1,11 @@
+`ifndef LAB1_L3P3_TB_SSP_TB_V
+`define LAB1_L3P3_TB_SSP_TB_V
+
 // Runs both tests from ssptest.v and checks what gets sent and read
 
 `timescale 1ns / 1ps
+
+`include "tb/ssptest.v"
 
 // collects the words sent on the serial lines
 module ssp_monitor (
@@ -105,3 +110,5 @@ module ssp_tb;
     end
 
 endmodule
+
+`endif // LAB1_L3P3_TB_SSP_TB_V

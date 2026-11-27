@@ -1,8 +1,13 @@
+`ifndef LAB1_L1P3_TB_MULTI_ADDER_TB_V
+`define LAB1_L1P3_TB_MULTI_ADDER_TB_V
+
 // Self-checking testbench for multi_adder (M words of N bits -> W-bit sum).
 //
 // Each multi_adder_check instance runs the dut and compares against a 64-bit sum.
 
 `timescale 1ns / 1ps
+
+`include "src/multi_adder.v"
 
 module multi_adder_check #(
     parameter int N = 4,
@@ -240,3 +245,5 @@ module multi_adder_tb;
         $dumpvars(0);
     end
 endmodule
+
+`endif // LAB1_L1P3_TB_MULTI_ADDER_TB_V

@@ -1,3 +1,10 @@
+`ifndef LAB1_L1P4_SRC_DIVIDER_ARRAY_V
+`define LAB1_L1P4_SRC_DIVIDER_ARRAY_V
+
+`include "../common/lib/structural/cas_row.v"
+`include "../common/lib/structural/full_adder.v"
+`include "../common/lib/structural/gates.v"
+
 // divider_array.v - non-restoring array divider
 //
 //   quotient = dividend / divisor,  remainder = dividend % divisor
@@ -88,3 +95,5 @@ module divider_array #(
         end
     endgenerate
 endmodule
+
+`endif // LAB1_L1P4_SRC_DIVIDER_ARRAY_V

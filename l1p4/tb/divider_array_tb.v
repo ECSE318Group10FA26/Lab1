@@ -1,3 +1,6 @@
+`ifndef LAB1_L1P4_TB_DIVIDER_ARRAY_TB_V
+`define LAB1_L1P4_TB_DIVIDER_ARRAY_TB_V
+
 // Testbench for the CAS array divider (problem4, Fig 4.3)
 //
 // every vector is checked against the reference
@@ -8,6 +11,8 @@
 // Prints min/avg/max/spread when D > 0.
 
 `timescale 1ns / 1ps
+
+`include "src/divider_array.v"
 
 module divider_array_tb;
 
@@ -151,3 +156,5 @@ module divider_array_tb;
     end
 
 endmodule
+
+`endif // LAB1_L1P4_TB_DIVIDER_ARRAY_TB_V

@@ -1,3 +1,8 @@
+`ifndef LAB1_COMMON_LIB_STRUCTURAL_CAS_V
+`define LAB1_COMMON_LIB_STRUCTURAL_CAS_V
+
+`include "../common/lib/structural/full_adder.v"
+
 // CAS: controlled adder/subtractor
 //   b' = b ^ op ;  {cout, s} = a + b' + cin
 // op = 1 subtracts (two's complement: b inverted)
@@ -24,3 +29,5 @@ module cas #(
         .cout(cout)
     );
 endmodule
+
+`endif // LAB1_COMMON_LIB_STRUCTURAL_CAS_V

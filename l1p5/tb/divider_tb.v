@@ -1,3 +1,6 @@
+`ifndef LAB1_L1P5_TB_DIVIDER_TB_V
+`define LAB1_L1P5_TB_DIVIDER_TB_V
+
 // divider_tb.v
 //
 // Self-checking testbench for the non-restoring divider
@@ -7,6 +10,8 @@
 // Timing is measured with a last-changed monitor
 
 `timescale 1ns / 1ps
+
+`include "src/divider.v"
 
 module divider_check #(
     parameter int N = 4,
@@ -265,3 +270,5 @@ module divider_tb;
         $finish;
     end
 endmodule
+
+`endif // LAB1_L1P5_TB_DIVIDER_TB_V

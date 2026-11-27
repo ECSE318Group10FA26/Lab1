@@ -1,3 +1,7 @@
+`ifndef LAB1_COMMON_LIB_STRUCTURAL_CAS_ROW_V
+`define LAB1_COMMON_LIB_STRUCTURAL_CAS_ROW_V
+
+`include "../common/lib/structural/cas.v"
 
 // cas_row: one row of the divider array
 //
@@ -56,3 +60,5 @@ module cas_row #(
         .cout(q)
     );
 endmodule
+
+`endif // LAB1_COMMON_LIB_STRUCTURAL_CAS_ROW_V

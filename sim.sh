@@ -7,10 +7,10 @@
 # --local uses a locally installed ModelSim (vsim on PATH) instead of
 # running the image through podman.
 #
-# The problem directory must contain a problem.env defining SOURCES,
-# TB_SOURCE and TB_TOP (see l1p1/problem.env for a template).
-# LIB_DIRS is optional: each directory's *.v files (*.vhd in vhdl mode)
-# are appended to SOURCES. Output (work/, transcript.log, VCD)
+# The problem directory must contain a problem.env defining TB_SOURCE and
+# TB_TOP (see problem_template.env for a template). Verilog testbenches include
+# their design dependencies; VHDL problems may also define SOURCES/LIB_DIRS.
+# Output (work/, transcript.log, VCD)
 set -euo pipefail
 shopt -s globstar
 
@@ -56,13 +56,9 @@ fi
 # shellcheck disable=SC1090
 source "$ENV_FILE"
 
-# at least one of SOURCES / LIB_DIRS must provide design sources (verilog
-# problems only; a vhdl problem's design may live entirely in the
-# common/lib/vhdl libraries, with just the testbench compiled into work)
-if [ "${HDL:-verilog}" = "verilog" ] && [ -z "${SOURCES:-}" ] && [ -z "${LIB_DIRS:-}" ]; then
-  echo "error: problem.env must define SOURCES or LIB_DIRS" >&2
-  exit 1
-fi
+# Verilog dependencies are included by the testbench. VHDL may additionally
+# list separately compiled design sources.
+SOURCES="${SOURCES:-}"
 : "${TB_SOURCE:?problem.env must define TB_SOURCE}"
 : "${TB_TOP:?problem.env must define TB_TOP}"
 

@@ -1,3 +1,6 @@
+`ifndef LAB1_L3P3_SRC_SSP_FIFO_V
+`define LAB1_L3P3_SRC_SSP_FIFO_V
+
 // Synchronous FIFO; writes while full and reads while empty are ignored
 
 module ssp_fifo #(
@@ -49,3 +52,5 @@ module ssp_fifo #(
     end
 
 endmodule
+
+`endif // LAB1_L3P3_SRC_SSP_FIFO_V

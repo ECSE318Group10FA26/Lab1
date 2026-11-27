@@ -1,3 +1,6 @@
+`ifndef LAB1_L3P4_SRC_FREECELLPLAYER_V
+`define LAB1_L3P4_SRC_FREECELLPLAYER_V
+
 // FreeCell player, starts from deal 8321
 // card = {suit, rank}, suit[1] = black, rank 0 = no card
 
@@ -103,3 +106,5 @@ module freecellPlayer (
     assign win = home[0] == K && home[1] == K && home[2] == K && home[3] == K;
 
 endmodule
+
+`endif // LAB1_L3P4_SRC_FREECELLPLAYER_V

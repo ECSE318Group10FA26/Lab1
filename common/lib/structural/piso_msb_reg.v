@@ -1,3 +1,9 @@
+`ifndef LAB1_COMMON_LIB_STRUCTURAL_PISO_MSB_REG_V
+`define LAB1_COMMON_LIB_STRUCTURAL_PISO_MSB_REG_V
+
+`include "../common/lib/structural/dff_sc.v"
+`include "../common/lib/structural/mux.v"
+
 // n-bit operand register with parallel load, shifting toward the MSB
 //
 // load = 1 : parallel load d_in
@@ -46,3 +52,5 @@ module piso_msb_reg #(
         .q    (q)
     );
 endmodule
+
+`endif // LAB1_COMMON_LIB_STRUCTURAL_PISO_MSB_REG_V

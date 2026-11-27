@@ -1,3 +1,12 @@
+`ifndef LAB1_L1P1_SRC_SERIAL_ADDER_STRUCTURAL_V
+`define LAB1_L1P1_SRC_SERIAL_ADDER_STRUCTURAL_V
+
+`include "../common/lib/structural/dff_sc.v"
+`include "../common/lib/structural/full_adder.v"
+`include "../common/lib/structural/mux.v"
+`include "../common/lib/structural/piso_reg.v"
+`include "../common/lib/structural/sipo_reg.v"
+
 // Bit-serial adder
 //
 // A single full adder computes the sum one bit at a time from LSB
@@ -94,3 +103,5 @@ module serial_adder_structural #(
 
     buf (cout, carry_q);
 endmodule
+
+`endif // LAB1_L1P1_SRC_SERIAL_ADDER_STRUCTURAL_V

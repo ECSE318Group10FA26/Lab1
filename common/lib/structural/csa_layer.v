@@ -1,3 +1,9 @@
+`ifndef LAB1_COMMON_LIB_STRUCTURAL_CSA_LAYER_V
+`define LAB1_COMMON_LIB_STRUCTURAL_CSA_LAYER_V
+
+`include "../common/lib/structural/csa.v"
+`include "../common/lib/structural/gates.v"
+
 module csa_layer #(
     // size of input in bits
     parameter int N = 1,
@@ -41,3 +47,5 @@ module csa_layer #(
         end
     endgenerate
 endmodule
+
+`endif // LAB1_COMMON_LIB_STRUCTURAL_CSA_LAYER_V

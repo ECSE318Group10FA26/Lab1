@@ -1,3 +1,8 @@
+`ifndef LAB1_COMMON_LIB_STRUCTURAL_BIT_REV_V
+`define LAB1_COMMON_LIB_STRUCTURAL_BIT_REV_V
+
+`include "../common/lib/structural/gates.v"
+
 // bit_rev.v - bit reversal wiring cell
 //
 //   y[i] = a[N-1-i]
@@ -24,3 +29,5 @@ module bit_rev #(
         end
     endgenerate
 endmodule
+
+`endif // LAB1_COMMON_LIB_STRUCTURAL_BIT_REV_V

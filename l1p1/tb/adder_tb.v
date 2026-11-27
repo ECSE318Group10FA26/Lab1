@@ -1,9 +1,15 @@
+`ifndef LAB1_L1P1_TB_ADDER_TB_V
+`define LAB1_L1P1_TB_ADDER_TB_V
+
 // Testbench for the bit-serial adder
 //
 // both the structural and the behavioral model are
 // checked against the reference {cout,sum} = addend+augend+cin
 
 `timescale 1ns / 1ps
+
+`include "src/serial_adder_behavioral.v"
+`include "src/serial_adder_structural.v"
 
 module adder_tb;
 
@@ -188,3 +194,5 @@ module adder_tb;
     end
 
 endmodule
+
+`endif // LAB1_L1P1_TB_ADDER_TB_V

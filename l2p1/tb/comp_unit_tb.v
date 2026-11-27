@@ -1,3 +1,6 @@
+`ifndef LAB1_L2P1_TB_COMP_UNIT_TB_V
+`define LAB1_L2P1_TB_COMP_UNIT_TB_V
+
 // Testbench for the structural comparison unit (comp_unit)
 //
 // comp_unit has no adder of its own: it shares the arithmetic core's
@@ -13,6 +16,9 @@
 // (non-power-of-2 reduction tree), N=1 (minimal).
 
 `timescale 1ns / 1ps
+
+`include "../common/lib/structural/alu/arith_unit.v"
+`include "../common/lib/structural/alu/comp_unit.v"
 
 module comp_unit_tb;
 
@@ -232,3 +238,5 @@ module comp_unit_tb;
     end
 
 endmodule
+
+`endif // LAB1_L2P1_TB_COMP_UNIT_TB_V

@@ -1,3 +1,10 @@
+`ifndef LAB1_L3P3_SRC_SSP_V
+`define LAB1_L3P3_SRC_SSP_V
+
+`include "src/ssp_fifo.v"
+`include "src/ssp_rx.v"
+`include "src/ssp_tx.v"
+
 // Synchronous serial port
 
 module ssp (
@@ -79,3 +86,5 @@ module ssp (
     end
 
 endmodule
+
+`endif // LAB1_L3P3_SRC_SSP_V

@@ -1,3 +1,6 @@
+`ifndef LAB1_L2P1_TB_ARITH_UNIT_TB_V
+`define LAB1_L2P1_TB_ARITH_UNIT_TB_V
+
 // Testbench for the structural ALU arithmetic core (arith_unit)
 //
 // Checks all 8 ops against an independent reference computed from the true
@@ -8,6 +11,8 @@
 // narrow-width generate paths (lookahead_adder has a dedicated N==1 case).
 
 `timescale 1ns / 1ps
+
+`include "../common/lib/structural/alu/arith_unit.v"
 
 module arith_unit_tb;
 
@@ -210,3 +215,5 @@ module arith_unit_tb;
     end
 
 endmodule
+
+`endif // LAB1_L2P1_TB_ARITH_UNIT_TB_V

@@ -1,3 +1,8 @@
+`ifndef LAB1_L3P3_TB_SSPTEST_V
+`define LAB1_L3P3_TB_SSPTEST_V
+
+`include "src/ssp.v"
+
 module ssp_test1;
 	reg clock, clear_b, pwrite, psel, sspclkin, sspfssin, ssprxd;
 	reg [7:0] data_in;
@@ -89,3 +94,5 @@ module ssp_test2;
 	ssp ssp2 (.PCLK(clock), .CLEAR_B(clear_b), .PSEL(psel), .PWRITE(pwrite), .SSPCLKIN(clk_wire), .SSPFSSIN(fss_wire), .SSPRXD(tx_to_rx), .PWDATA(data_in), .PRDATA(data_out), .SSPCLKOUT(clk_wire), .SSPFSSOUT(fss_wire), .SSPTXD(tx_to_rx), .SSPOE_B(oe_b), .SSPTXINTR(ssptxintr), .SSPRXINTR(ssprxintr));
 
 endmodule
+
+`endif // LAB1_L3P3_TB_SSPTEST_V

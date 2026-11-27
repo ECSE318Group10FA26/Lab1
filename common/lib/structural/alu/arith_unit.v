@@ -1,3 +1,10 @@
+`ifndef LAB1_COMMON_LIB_STRUCTURAL_ALU_ARITH_UNIT_V
+`define LAB1_COMMON_LIB_STRUCTURAL_ALU_ARITH_UNIT_V
+
+`include "../common/lib/structural/gates.v"
+`include "../common/lib/structural/lookahead_adder.v"
+`include "../common/lib/structural/mux.v"
+
 // structural ALU arithmetic core: add/subtract/increment/decrement
 //
 //   op = 0 (ADD):  cout, o = a + b + cin, v = signed overflow
@@ -215,3 +222,5 @@ module arith_unit #(
         .y  (v)
     );
 endmodule
+
+`endif // LAB1_COMMON_LIB_STRUCTURAL_ALU_ARITH_UNIT_V

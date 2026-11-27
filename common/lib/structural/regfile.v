@@ -1,3 +1,11 @@
+`ifndef LAB1_COMMON_LIB_STRUCTURAL_REGFILE_V
+`define LAB1_COMMON_LIB_STRUCTURAL_REGFILE_V
+
+`include "../common/lib/structural/demux.v"
+`include "../common/lib/structural/dff_sc.v"
+`include "../common/lib/structural/gates.v"
+`include "../common/lib/structural/mux.v"
+
 // regfile.v - structural register file: 2**R registers x N bits
 //
 //   write: synchronous -- on posedge clk with we, regs[w_addr] <= w_data
@@ -111,3 +119,5 @@ module regfile #(
         .y  (r_data_b)
     );
 endmodule
+
+`endif // LAB1_COMMON_LIB_STRUCTURAL_REGFILE_V

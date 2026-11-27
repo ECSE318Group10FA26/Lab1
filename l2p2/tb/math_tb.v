@@ -1,3 +1,6 @@
+`ifndef LAB1_L2P2_TB_MATH_TB_V
+`define LAB1_L2P2_TB_MATH_TB_V
+
 // Testbench for the structural CPU running asm/math.asm
 //
 // math.asm (see its header) computes -N, popcount(N) via the SWAR mask
@@ -9,6 +12,9 @@
 //     TB_NAME=math_tb ../sim.sh l2p2        (from l2p2/)
 
 `timescale 1ns / 1ps
+
+`include "../common/lib/structural/clk_gen.v"
+`include "src/cpu.v"
 
 module math_tb;
 
@@ -119,3 +125,5 @@ module math_tb;
     end
 
 endmodule
+
+`endif // LAB1_L2P2_TB_MATH_TB_V

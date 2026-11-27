@@ -1,6 +1,12 @@
+`ifndef LAB1_L2P2_TB_RAM_TB_V
+`define LAB1_L2P2_TB_RAM_TB_V
+
 // Testbench for the structural RAM (ram) and clock generator (clk_gen)
 
 `timescale 1ns / 1ps
+
+`include "../common/lib/structural/clk_gen.v"
+`include "../common/lib/structural/ram/ram.v"
 
 module ram_tb;
 
@@ -373,3 +379,5 @@ module ram_tb;
     end
 
 endmodule
+
+`endif // LAB1_L2P2_TB_RAM_TB_V

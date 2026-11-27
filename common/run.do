@@ -3,7 +3,8 @@
 # Driven by environment variables exported by sim.sh (which loads them from
 # the problem's problem.env):
 #
-#   SOURCES   : space-separated design source files, compiled in order
+#   SOURCES   : space-separated VHDL design source files, compiled in order
+#               (normally empty for Verilog, whose TB includes dependencies)
 #   TB_SOURCE : testbench source file
 #   TB_TOP    : testbench top-level module/entity (passed to vsim)
 #   HDL       : "verilog" (default) compiles with vlog, "vhdl" with vcom
@@ -84,7 +85,8 @@ if {$hdl eq "vhdl" && [info exists env(VHDL_LIB_NAMES)] && $env(VHDL_LIB_NAMES) 
     }
 }
 
-# compile design sources in order, then the testbench
+# compile any separately listed design sources in order, then the testbench
+# (a Verilog testbench includes the complete design dependency tree)
 # (verilog: -timescale gives the library modules a timeunit now that they
 # carry gate delays; testbenches declare their own `timescale, which takes
 # precedence)

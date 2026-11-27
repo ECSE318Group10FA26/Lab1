@@ -16,7 +16,7 @@ M="${2:-3}"
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
-# design sources, in dependency order (same set as problem.env)
+# design sources, in dependency order for gate analysis
 SOURCES=(
   "$REPO_ROOT/l1p3/src/multi_adder.v"
   "$REPO_ROOT/common/lib/structural/gates.v"
@@ -46,7 +46,7 @@ ltp
 EOF
 
 # convert SystemVerilog -> Verilog-2005, then elaborate and analyse
-sv2v "${SOURCES[@]}" >"$TMP/converted.v"
+sv2v -I "$REPO_ROOT/l1p3" "${SOURCES[@]}" >"$TMP/converted.v"
 yosys -s "$TMP/script.ys" >"$TMP/out.log" 2>&1
 
 # summarise

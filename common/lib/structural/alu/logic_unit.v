@@ -1,3 +1,9 @@
+`ifndef LAB1_COMMON_LIB_STRUCTURAL_ALU_LOGIC_UNIT_V
+`define LAB1_COMMON_LIB_STRUCTURAL_ALU_LOGIC_UNIT_V
+
+`include "../common/lib/structural/gates.v"
+`include "../common/lib/structural/mux.v"
+
 // structural bitwise logic unit: and/or/xor/buf and their complements
 //
 //   sel = 0 (AND):  y = a & b     sel = 4 (NAND): y = ~(a & b)
@@ -84,3 +90,5 @@ module logic_unit #(
         .y(y)
     );
 endmodule
+
+`endif // LAB1_COMMON_LIB_STRUCTURAL_ALU_LOGIC_UNIT_V

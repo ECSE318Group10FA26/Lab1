@@ -1,3 +1,14 @@
+`ifndef LAB1_L1P5_SRC_DIVIDER_V
+`define LAB1_L1P5_SRC_DIVIDER_V
+
+`include "../common/lib/structural/cas_row.v"
+`include "../common/lib/structural/dff_sc.v"
+`include "../common/lib/structural/gates.v"
+`include "../common/lib/structural/lookahead_adder.v"
+`include "../common/lib/structural/mux.v"
+`include "../common/lib/structural/piso_msb_reg.v"
+`include "../common/lib/structural/piso_reg.v"
+
 // divider - Non-restoring unsigned clocked divider
 //
 // Algorithm:
@@ -209,3 +220,5 @@ module divider #(
     );
 
 endmodule
+
+`endif // LAB1_L1P5_SRC_DIVIDER_V

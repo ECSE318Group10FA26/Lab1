@@ -1,3 +1,6 @@
+`ifndef LAB1_L2P2_TB_CPU_TB_V
+`define LAB1_L2P2_TB_CPU_TB_V
+
 // Testbench for the structural CPU (cpu)
 //
 // The program is ASSEMBLED: asm/asm.py converts asm/prog.asm into
@@ -6,6 +9,9 @@
 //     python3 asm/asm.py asm/prog.asm && ../sim.sh l2p2   (from l2p2/)
 
 `timescale 1ns / 1ps
+
+`include "../common/lib/structural/clk_gen.v"
+`include "src/cpu.v"
 
 module cpu_tb;
 
@@ -237,3 +243,5 @@ module cpu_tb;
     end
 
 endmodule
+
+`endif // LAB1_L2P2_TB_CPU_TB_V

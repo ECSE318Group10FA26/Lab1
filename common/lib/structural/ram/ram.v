@@ -1,3 +1,11 @@
+`ifndef LAB1_COMMON_LIB_STRUCTURAL_RAM_RAM_V
+`define LAB1_COMMON_LIB_STRUCTURAL_RAM_RAM_V
+
+`include "../common/lib/structural/demux.v"
+`include "../common/lib/structural/dff_sc.v"
+`include "../common/lib/structural/gates.v"
+`include "../common/lib/structural/mux.v"
+
 // structural RAM: 2**A words x N bits, accessed as an aligned group of
 // 2**size words at a time
 //
@@ -309,3 +317,5 @@ module ram #(
         end
     endgenerate
 endmodule
+
+`endif // LAB1_COMMON_LIB_STRUCTURAL_RAM_RAM_V

@@ -1,3 +1,6 @@
+`ifndef LAB1_L3P3_SRC_SSP_TX_V
+`define LAB1_L3P3_SRC_SSP_TX_V
+
 // SSP transmit logic, SSPCLKOUT = PCLK / 2
 
 module ssp_tx (
@@ -60,3 +63,5 @@ module ssp_tx (
     end
 
 endmodule
+
+`endif // LAB1_L3P3_SRC_SSP_TX_V

@@ -1,3 +1,6 @@
+`ifndef LAB1_L1P1_SRC_SERIAL_ADDER_BEHAVIORAL_V
+`define LAB1_L1P1_SRC_SERIAL_ADDER_BEHAVIORAL_V
+
 // Serial Adder - behavioral implementation
 module serial_adder_behavioral #(
     parameter int N = 4
@@ -22,3 +25,5 @@ module serial_adder_behavioral #(
         // model finishes its n shift/add cycles
     end
 endmodule
+
+`endif // LAB1_L1P1_SRC_SERIAL_ADDER_BEHAVIORAL_V

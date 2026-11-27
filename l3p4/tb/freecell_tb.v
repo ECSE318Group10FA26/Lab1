@@ -1,6 +1,12 @@
+`ifndef LAB1_L3P4_TB_FREECELL_TB_V
+`define LAB1_L3P4_TB_FREECELL_TB_V
+
 // Checks the professor's game, plus a custom deal that builds a full K..A run
 
 `timescale 1ns / 1ps
+
+`include "src/freecellPlayer.v"
+`include "tb/testFreecell.v"
 
 module fc_directed;
     localparam logic [1:0] H = 2'd0, D = 2'd1, S = 2'd2, C = 2'd3;
@@ -131,3 +137,5 @@ module freecell_tb;
     end
 
 endmodule
+
+`endif // LAB1_L3P4_TB_FREECELL_TB_V

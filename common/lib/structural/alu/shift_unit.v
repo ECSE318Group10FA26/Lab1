@@ -1,3 +1,10 @@
+`ifndef LAB1_COMMON_LIB_STRUCTURAL_ALU_SHIFT_UNIT_V
+`define LAB1_COMMON_LIB_STRUCTURAL_ALU_SHIFT_UNIT_V
+
+`include "../common/lib/structural/bit_rev.v"
+`include "../common/lib/structural/gates.v"
+`include "../common/lib/structural/mux.v"
+
 // structural barrel shifter: logical/arithmetic shifts and rotates
 //
 //   op = 0 (SRL): o = a >>  shamt   (zero fill)
@@ -213,3 +220,5 @@ module shift_unit #(
         end
     endgenerate
 endmodule
+
+`endif // LAB1_COMMON_LIB_STRUCTURAL_ALU_SHIFT_UNIT_V

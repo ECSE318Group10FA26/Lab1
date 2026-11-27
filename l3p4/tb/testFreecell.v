@@ -1,3 +1,8 @@
+`ifndef LAB1_L3P4_TB_TESTFREECELL_V
+`define LAB1_L3P4_TB_TESTFREECELL_V
+
+`include "src/freecellPlayer.v"
+
 // testbench for the freecell player.
 // This simple testbench presents one move to the freecell player at each
 // clock cycle. The task "doMove" allows the user to specify the moves in
@@ -182,3 +187,5 @@ module testFreeCell;
     freecellPlayer fc(clock,source,dest,win);
 
 endmodule // testFreeCell
+
+`endif // LAB1_L3P4_TB_TESTFREECELL_V

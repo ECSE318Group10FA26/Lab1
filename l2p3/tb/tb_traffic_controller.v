@@ -1,3 +1,6 @@
+`ifndef LAB1_L2P3_TB_TB_TRAFFIC_CONTROLLER_V
+`define LAB1_L2P3_TB_TB_TRAFFIC_CONTROLLER_V
+
 // Testbench for the traffic light controller (traffic_controller)
 //
 // Every clock the lamps are checked against a reference model of the phase
@@ -9,6 +12,8 @@
 // edge.
 
 `timescale 1ns / 1ps
+
+`include "src/traffic_controller.v"
 
 module tb_traffic_controller;
 
@@ -232,3 +237,5 @@ module tb_traffic_controller;
                      Ga, Ya, Ra, Gb, Yb, Rb);
 
 endmodule
+
+`endif // LAB1_L2P3_TB_TB_TRAFFIC_CONTROLLER_V

@@ -1,3 +1,9 @@
+`ifndef LAB1_COMMON_LIB_STRUCTURAL_ALU_COMP_UNIT_V
+`define LAB1_COMMON_LIB_STRUCTURAL_ALU_COMP_UNIT_V
+
+`include "../common/lib/structural/gates.v"
+`include "../common/lib/structural/mux.v"
+
 // structural comparison unit: flag logic on a SHARED subtractor
 //
 //   op = 0:        FALSE   o = 0
@@ -140,3 +146,5 @@ module comp_unit #(
         .y(o)
     );
 endmodule
+
+`endif // LAB1_COMMON_LIB_STRUCTURAL_ALU_COMP_UNIT_V

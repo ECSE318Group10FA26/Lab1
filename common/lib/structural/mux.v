@@ -1,3 +1,8 @@
+`ifndef LAB1_COMMON_LIB_STRUCTURAL_MUX_V
+`define LAB1_COMMON_LIB_STRUCTURAL_MUX_V
+
+`include "../common/lib/structural/gates.v"
+
 // mux.v - parameterized binary tree multiplexer
 //
 //   mux #(1, 1) : the classic 2:1, 1-bit mux
@@ -87,3 +92,5 @@ module mux #(
         end
     endgenerate
 endmodule
+
+`endif // LAB1_COMMON_LIB_STRUCTURAL_MUX_V

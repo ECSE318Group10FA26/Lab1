@@ -1,3 +1,10 @@
+`ifndef LAB1_L1P3_SRC_MULTI_ADDER_V
+`define LAB1_L1P3_SRC_MULTI_ADDER_V
+
+`include "../common/lib/structural/csa_stack.v"
+`include "../common/lib/structural/gates.v"
+`include "../common/lib/structural/lookahead_adder.v"
+
 // multi_adder - sum M words of N bits into one W = N + clog2(M)-bit result.
 //
 //   packed inputs: word k = in_vecs[k*N +: N]  (all weight 1)
@@ -48,3 +55,5 @@ module multi_adder #(
         .y(result)
     );
 endmodule
+
+`endif // LAB1_L1P3_SRC_MULTI_ADDER_V

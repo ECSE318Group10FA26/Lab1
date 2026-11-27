@@ -1,3 +1,7 @@
+`ifndef LAB1_COMMON_LIB_STRUCTURAL_CARRY_GEN_V
+`define LAB1_COMMON_LIB_STRUCTURAL_CARRY_GEN_V
+
+`include "../common/lib/structural/gates.v"
 
 // Carry-generate
 //
@@ -72,3 +76,5 @@ module carry_gen #(
         .y(cout)
     );
 endmodule
+
+`endif // LAB1_COMMON_LIB_STRUCTURAL_CARRY_GEN_V

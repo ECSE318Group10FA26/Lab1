@@ -1,3 +1,13 @@
+`ifndef LAB1_COMMON_LIB_STRUCTURAL_ALU_ALU_CORE_V
+`define LAB1_COMMON_LIB_STRUCTURAL_ALU_ALU_CORE_V
+
+`include "../common/lib/structural/alu/arith_unit.v"
+`include "../common/lib/structural/alu/comp_unit.v"
+`include "../common/lib/structural/alu/logic_unit.v"
+`include "../common/lib/structural/alu/shift_unit.v"
+`include "../common/lib/structural/gates.v"
+`include "../common/lib/structural/mux.v"
+
 // structural ALU: arithmetic, logic, shift and compare cores on one
 // datapath, sharing ONE carry chain (the arith core doubles as the
 // comparator's subtractor)
@@ -209,3 +219,5 @@ module alu_core #(
         .y  (o)
     );
 endmodule
+
+`endif // LAB1_COMMON_LIB_STRUCTURAL_ALU_ALU_CORE_V

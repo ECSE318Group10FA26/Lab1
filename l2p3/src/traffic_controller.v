@@ -1,3 +1,6 @@
+`ifndef LAB1_L2P3_SRC_TRAFFIC_CONTROLLER_V
+`define LAB1_L2P3_SRC_TRAFFIC_CONTROLLER_V
+
 // traffic_controller - traffic light controller for the A/B street intersection
 //
 // States:
@@ -142,3 +145,5 @@ module traffic_controller (
         else {Ga, Ya, Ra, Gb, Yb, Rb} = {rGa, rYa, rRa, rGb, rYb, rRb};
     end
 endmodule
+
+`endif // LAB1_L2P3_SRC_TRAFFIC_CONTROLLER_V

@@ -1,3 +1,8 @@
+`ifndef LAB1_COMMON_LIB_STRUCTURAL_DEMUX_V
+`define LAB1_COMMON_LIB_STRUCTURAL_DEMUX_V
+
+`include "../common/lib/structural/gates.v"
+
 // demux.v - parameterized binary tree demultiplexer / one-hot decoder
 //
 //   demux #(1, 1) : the classic 1:2, 1-bit demux
@@ -85,3 +90,5 @@ module demux #(
         end
     endgenerate
 endmodule
+
+`endif // LAB1_COMMON_LIB_STRUCTURAL_DEMUX_V

@@ -21,8 +21,7 @@ R="${3:-2}"
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
-# design sources, in dependency order (same set as problem.env's
-# SOURCES + LIB_DIRS)
+# design sources, in dependency order for gate analysis
 SOURCES=(
   "$REPO_ROOT/l2p2/src/cpu.v"
   "$REPO_ROOT/common/lib/structural/alu/alu_core.v"
@@ -58,7 +57,7 @@ ltp -noff
 EOF
 
 # convert SystemVerilog -> Verilog-2005, then elaborate and analyse
-sv2v "${SOURCES[@]}" >"$TMP/converted.v"
+sv2v -I "$REPO_ROOT/l2p2" "${SOURCES[@]}" >"$TMP/converted.v"
 yosys -s "$TMP/script.ys" >"$TMP/out.log" 2>&1
 
 # summarise (stat -width annotates cell types as $type_width, e.g. $dff_4)
